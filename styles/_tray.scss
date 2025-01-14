@@ -1,0 +1,134 @@
+/* ====================================================================================
+
+	Mobile nav "tray" (drawer)
+
+==================================================================================== */
+
+.tray {
+
+	// Initial state
+	opacity:    0;
+	visibility: hidden;
+
+	// Basics
+	position: fixed;
+	top:      calc(var(--header-pos-top) - var(--scroll-top-before-header));
+	bottom:   0;
+	right:    0;
+	z-index: #{"calc(var(--header-z) - 10)"};
+
+	grid-auto-rows: min-content;
+	row-gap: 3rem;
+
+	width:  var(--tray-w, 100vw);
+	height: #{"calc(var(--vh100, 100vh) - var(--header-pos-top, 0px))"};
+
+	padding-top: 48px;
+	padding-bottom: 26px;
+
+	background-color: var(--gainsboro);
+
+	overflow-y: scroll;
+	overflow-x: hidden;
+
+	transition-property:        visibility, opacity;
+	transition-duration:        0ms, var(--trans-dur);
+	transition-timing-function: var(--trans-func), var(--trans-func);
+	transition-delay:           var(--trans-dur), 0ms;
+
+}
+
+.tray-opened.tray {
+	opacity:    1;
+	visibility: visible;
+
+	transition-delay: 0ms, 0ms;
+}
+
+html:not(.keyboard-tray-enabled) .tray:focus {
+	outline: 0;
+}
+
+html.tray-opened .site-header {
+	background-color: var(--gainsboro);
+}
+
+// -----------------------------
+// Tray =Toggle Button
+// -----------------------------
+
+.tray__toggle {
+	z-index: 110;
+	width: 32px;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	// color: var(--primary-color);
+
+	margin: auto -4px auto auto;
+}
+
+
+.tray__toggle svg {
+	width: 24px;
+}
+
+
+.tray__toggle-inner {
+	height: 16px;
+}
+
+.tray__toggle:hover,
+.tray__toggle:focus,
+.tray-opened.tray__toggle {
+	color: var(--link-color);
+}
+
+.js-focus-visible .tray__toggle.focus-visible,
+.js-focus-visible .tray__toggle:focus-visible,
+.tray__toggle:focus-visible {
+	outline-offset: -4px;
+}
+
+.tray__toggle svg {
+	overflow: visible;
+}
+
+.tray__toggle-line {
+	transition-duration: var(--trans-dur);
+	transition-property: transform;
+	transition-timing-function: var(--trans-func);
+	position: relative;
+	transform-origin: 50% 50%;
+}
+
+.tray__toggle-line--a {
+	transform: translate(0, 0);
+}
+
+.tray__toggle-line--c,
+.tray__toggle-line--b {
+	transform: translate(0, 10px);
+}
+
+.tray__toggle-line--d {
+	transform: translate(0, 20px);
+}
+
+.tray-opened .tray__toggle-line--c {
+	opacity: 0;
+}
+.tray-opened .tray__toggle-line--d,
+.tray-opened .tray__toggle-line--a {
+	opacity: 0;
+}
+
+.tray-opened .tray__toggle-line--b {
+	transform: translate(-8px, 6px) rotate(45deg);
+}
+
+.tray-opened .tray__toggle-line--c {
+	transform: translate(8px, 3px) rotate(-45deg);
+	opacity: 1;
+}

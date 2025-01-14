@@ -1,0 +1,23 @@
+/* ====================================================================================
+
+	Grid Variables
+
+==================================================================================== */
+
+$design-cols: 12; // 12 per design specs
+$max-cols:    14; // $design-cols, plus two columns for page gutters
+$max-rows:    6;  // If you need more than six specified rows, perhaps consider using an additional grid?
+$col-width:   minmax(0, 1fr);
+
+:root {
+
+	--container-w: #{$container-w};
+	--page-gutter: #{fluid(16px, 48px, $breakpoint-sm, $breakpoint-md)};
+
+	--grid-column-count:  #{$design-cols};
+	--grid-container-w:   calc(var(--container-w) - ( var(--column-gap) * calc(#{$design-cols} - 1 ) ) );
+	--grid-row-count:     #{$max-rows};
+	--grid-page-gutter:   minmax( #{"calc(var(--page-gutter) - var(--column-gap))"}, 1fr);
+	--grid-page-gutter-r: var(--grid-page-gutter);
+	--grid-page-gutter-l: var(--grid-page-gutter);
+}

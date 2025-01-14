@@ -1,0 +1,39 @@
+/* ====================================================================================
+
+	Site Header / Header Nav Menus
+
+==================================================================================== */
+
+$nav-default-ht: 48px;
+
+:root {
+
+	--header-offset-top: 0px;
+	--header-ht: 66px;
+	// Combined height of any/all visible top bars including alerts & promos
+	--header-ht-plus: #{"calc(var(--header-ht) + var(--header-offset-top))"};
+
+	--header-z: 60;
+
+	--header-pos-top: var(--header-ht);
+
+	// If we've scrolled down, but not all the way past the pre-header content. Will never be greater than height of pre-header content.
+	--scroll-top-before-header: 0px;
+
+	--tray-w: 100vw;
+
+	--logo-w: 141px;
+}
+
+@include media(">=md") {
+
+	:root {
+
+		--header-offset-top: 0px;
+		--header-ht: 118px;
+
+		--logo-w: 237px;
+
+	}
+
+}

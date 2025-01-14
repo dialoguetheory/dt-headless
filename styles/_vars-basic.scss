@@ -1,0 +1,60 @@
+/* ====================================================================================
+
+	General variables
+
+==================================================================================== */
+
+$container-w: 1500px;
+ 
+// -------------------
+// Hero height
+// -------------------
+// Will be updated by JS (subtracts browser bars): https://github.com/Faisal-Manzer/postcss-viewport-height-correction
+:root {
+	--vh100: 100vh;
+}
+
+// -------------------
+// Basics
+// -------------------
+:root {
+
+	// -------------------
+	// Used sitewide
+	// -------------------
+	--border-w: 2px;
+
+	// -------------------
+	// Video lightbox
+	// -------------------
+	--play-btn-size: 43px;
+
+	// -------------------
+	// Column gap used in grid and flex
+	// -------------------
+	--column-gap: 8px;
+
+	// -------------------
+	// Focus outline
+	// -------------------
+	--focus-offset: 2px;
+
+	// -------------------
+	// Vert margins for text elements
+	// -------------------
+	--vert-marg:    1rem;
+	--vert-marg-li: 0.5rem;
+
+	// -------------------
+	// List gutters
+	// -------------------
+	--gutter-list:      32px;
+	--gutter-list-item: 12px;
+
+}
+
+@include media(">=sm") {
+	:root {
+		--column-gap: #{fluid(24px, 32px, $breakpoint-sm, $breakpoint-lg)};
+	}
+}

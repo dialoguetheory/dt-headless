@@ -1,0 +1,17 @@
+/* ====================================================================================
+
+	Margin utility classes
+
+==================================================================================== */
+
+
+@each $breakpoint-key, $breakpoint in $breakpoints-map {
+	@if $breakpoint-key != "" { $breakpoint: #{$breakpoint-delimiter}#{$breakpoint}; }
+	@include breakpoint($breakpoint-key) {
+
+		.margin-top-auto#{$breakpoint} {
+			margin-top: auto;
+		}
+
+	}
+}

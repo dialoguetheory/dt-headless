@@ -1,0 +1,260 @@
+/* ====================================================================================
+
+	_text-vars.scss
+
+	Define character style mixins & variables.
+
+	@related: fonts_text_charstyles_type_headings_titles
+
+==================================================================================== */
+
+/* ====================================================================================
+
+	Text =Breakpoint
+	from mobile character styles to desktop
+
+==================================================================================== */
+
+$text-breakpoint: ">=md";
+
+:root {
+	--line-ht: 1.125;
+	--text-breakpoint-ref: #{$text-breakpoint};
+}
+
+
+/* ====================================================================================
+
+	=Font =Families
+
+==================================================================================== */
+
+:root {
+	// Use for: 1) External sites using ui.css, 2) Where using real font could require preload or add FOUT above the fold e.g. cookie banners
+	--font-family-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	--font-family-main: 'Inter Cycr', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	--font-family-italic: 'Inter Cycr Italic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* ====================================================================================
+
+	=Body Text
+
+==================================================================================== */
+
+/* -------------------------
+
+	¡¡¡ Important !!!
+
+	In order to ensure proper override behavior:
+
+	These presets must ALL SHARE THE SAME PROPERTIES within a breakpoint. Otherwise they won't override each other properly.
+
+	Example:
+
+	If you add letter-spacing to BodyTextJumbo() on desktop, you must also set that explicitly for the rest of them on desktop.
+
+	(If these presets are responsive e.g. .body-mini@md, the above principle must be applied across all breakpoints as well.)
+
+------------------------- */
+
+@mixin BodyText() {
+	font-family: var(--font-family-main);
+	font-size:   1rem;
+	line-height: var(--line-ht);
+	font-weight: 500;
+	font-style:  normal;
+}
+
+@mixin BodyTextBig() {
+	font-family: var(--font-family-main);
+	font-size:   1.125rem;
+	line-height: var(--line-ht);
+	font-weight: 700;
+	font-style:  normal;
+}
+
+@mixin BodyTextBigThin() {
+	font-family: var(--font-family-main);
+	font-size:   1.125rem;
+	line-height: var(--line-ht);
+	font-weight: 400;
+	font-style:  normal;
+}
+
+@mixin BodyTextMini() {
+	font-family: var(--font-family-main);
+	font-size:   .75rem;
+	line-height: 125%;
+	font-weight: 500;
+	font-style:  normal;
+}
+
+@mixin BodyTextMiniThin() {
+	font-family: var(--font-family-main);
+	font-size:   .75rem;
+	line-height: 125%;
+	font-weight: 400;
+	font-style:  normal;
+}
+
+@mixin PreHeading() {
+	font-family:    var(--font-family-main);
+	font-size:      .875rem;
+	line-height:    var(--line-ht);
+	font-weight:    800;
+	font-style:     normal;
+	text-transform: uppercase;
+}
+
+/* ====================================================================================
+
+	=Headings
+
+==================================================================================== */
+
+/* -------------------------
+
+	¡¡¡ Important !!!
+
+	In order to ensure proper override behavior:
+
+	1. These presets must ALL SHARE THE SAME PROPERTIES within a breakpoint. Otherwise they won't override each other properly.
+	2. All should include explicit line-height from the outset so we don't have to go back and redo stuff later.
+
+------------------------- */
+
+@mixin H1() {
+
+	font-family: var(--font-family-main);
+	font-size:   2rem;
+	line-height: var(--line-ht);
+	font-weight: 600;
+	font-style:  normal;
+
+	color: var(--h1-color);
+
+	@include media($text-breakpoint) {
+		font-size: #{fluid(32px, 48px, $breakpoint-md, $breakpoint-lg)};
+		line-height: 87.5%;
+	}
+
+	@include media(">=lg") {
+		font-size: #{fluid(48px, 58px, $breakpoint-lg, $breakpoint-xl)};
+	}
+
+}
+
+@mixin H1--Jumbo() {
+
+	font-family:    var(--font-family-main);
+	font-size:      2.5rem;
+	line-height:    var(--line-ht);
+	font-weight:    500;
+	font-style:     normal;
+	letter-spacing: -.16px;
+
+	@include media($text-breakpoint) {
+		font-size:      #{fluid(40px, 88px, $breakpoint-md, $breakpoint-lg)};
+		letter-spacing: -.352px;
+	}
+
+	@include media(">=lg") {
+		font-size: #{fluid(88px, 106px, $breakpoint-lg, $breakpoint-xl)};
+	}
+
+}
+
+@mixin H2() {
+
+	color: var(--h2-color);
+
+	font-family: var(--font-family-main);
+	font-size:   1.5rem;
+	line-height: var(--line-ht);
+	font-weight: 600;
+	font-style:  normal;
+
+	@include media(">=lg") {
+		font-size: #{fluid(24px, 29px, $breakpoint-lg, $breakpoint-xl)};
+	}
+
+}
+
+@mixin H3() {
+
+	color: var(--h3-color);
+
+	font-family: var(--font-family-main);
+	font-size:   1.125rem;
+	line-height: var(--line-ht);
+	font-weight: 700;
+	font-style:  normal;
+
+	@include media(">=lg") {
+		font-size: #{fluid(18px, 22px, $breakpoint-lg, $breakpoint-xl)};
+	}
+
+}
+
+@mixin H4() {
+
+	color: var(--h4-color);
+
+	font-family: var(--font-family-main);
+	font-size:   1rem;
+	line-height: var(--line-ht);
+	font-weight: 700;
+	font-style:  normal;
+
+	@include media(">=lg") {
+		font-size: #{fluid(16px, 19px, $breakpoint-lg, $breakpoint-xl)};
+	}
+
+}
+
+@mixin H5() {
+
+	color: var(--h5-color);
+
+	font-family: var(--font-family-main);
+	font-size:   .875rem;
+	line-height: var(--line-ht);
+	font-weight: 700;
+	font-style:  normal;
+
+	@include media(">=lg") {
+		font-size: #{fluid(14px, 17px, $breakpoint-lg, $breakpoint-xl)};
+	}
+
+}
+
+// Used on section-facts-list
+@mixin TitleJumbo() {
+
+	color: var(--fg-color);
+
+	font-family: var(--font-family-main);
+	font-size:   1.625rem;
+	line-height: var(--line-ht);
+	font-weight: 600;
+
+	@include media(">=lg") {
+		font-size: #{fluid(26px, 34px, $breakpoint-lg, $breakpoint-xl)};
+	}
+
+}
+
+/* -------------------------
+
+	Hyphenate
+
+	Does not work on capitalized words. In instances where there is a problematic string, a shy hyphen can be used.
+	@link https://developer.mozilla.org/en-US/docs/Web/CSS/hyphens
+
+------------------------- */
+
+@mixin Hyphenate() {
+	hyphens: auto;
+	word-wrap: normal;
+}

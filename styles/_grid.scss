@@ -1,0 +1,141 @@
+/* ====================================================================================
+
+	# Grid
+
+	Inspired by:
+	@link https://tailwindcss.com/
+
+==================================================================================== */
+
+@mixin grid($infix) {
+	.grid#{$infix} {
+		--grid-column-width: calc( calc( 100% / #{$design-cols} ) + calc( var(--column-gap) / #{$design-cols} ) );
+		--column-count: #{$design-cols};
+
+		display:               grid;
+		grid-column-gap:       var(--column-gap);
+		grid-template-columns: repeat(#{$design-cols}, #{$col-width});
+	}
+}
+
+@mixin grid-auto-row($infix) {
+	.grid--row-auto#{$infix} {
+		grid-auto-rows: auto;
+	}
+	.grid--row-min-content#{$infix} {
+		grid-auto-rows: min-content;
+	}
+}
+
+/** ====================================================================================
+
+	Full width
+
+	Adds page gutters as 1st and 14th column. The internal 12 columns will expand to the max content width.
+
+==================================================================================== */
+
+@mixin grid-full($infix) {
+	.grid--full#{$infix} {
+		grid-template-columns: 	var(--grid-page-gutter-l)
+		repeat(#{$design-cols}, minmax(0, calc( ( var(--grid-container-w)  / #{$design-cols} ) ) ) )
+							   	var(--grid-page-gutter-r);
+
+	}
+}
+
+/** ====================================================================================
+
+
+	Modify grid default column and row count
+
+
+	(I have yet to find a reason to set a row count, but it doesn't seem like any harm to leave it as an option.)
+
+==================================================================================== */
+
+@mixin grid-cols($infix) {
+	$areas : '';
+
+	@for $c from 1 through $max-cols {
+
+		@if $c != 1 {
+			$areas : $areas + ' ' + $c;
+		} @else {
+			$areas : $areas + $c;
+		}
+
+		.grid--#{$c}-cols#{$infix} {
+			grid-template-columns: repeat($c, #{$col-width});
+		}
+	}
+}
+
+@mixin grid-rows($infix) {
+	@for $r from 1 through $max-rows {
+		.grid--#{$r}-rows#{$infix} {
+			grid-template-rows: repeat($r, auto);
+		}
+	}
+}
+
+/** ====================================================================================
+
+	Child Elements
+
+	Each child element can be positioned using:
+		col-#-span-# : The column at which to start and the number of columns (including self) to span
+		row-#-span-# : The row at which to start and the number of rows (including self) to span
+
+	By default, rows are dynamic -- meaning the grid will build as many rows as are required by its child elements. In instances of page sections, which fall one after another down the dom, there will likely be no need to set a row value.
+
+==================================================================================== */
+
+@mixin columns($infix) {
+	@for $st from 1 through $max-cols {
+		@for $sp from 1 through $max-cols {
+			.col-#{$st}-span-#{$sp}#{$infix} {
+				--grid-column-width: calc( calc( 100% / #{$sp} ) + calc( var(--column-gap) / #{$sp} ) - var(--column-gap) );
+				--column-count: #{$sp};
+				grid-column-start: $st;
+				grid-column-end:   span $sp
+			}
+		}
+	}
+}
+
+@mixin rows($infix) {
+	@for $st from 1 through $max-rows {
+		@for $sp from 1 through $max-rows {
+			.row-#{$st}-span-#{$sp}#{$infix} {
+				grid-row-start: $st;
+				grid-row-end:   span $sp;
+			}
+		}
+		.row-#{$st}-span-all#{$infix} {
+			grid-row-start: $st;
+			grid-row-end:   span -1;
+		}
+	}
+}
+
+// ----------------------------------------------
+// Functions
+// ----------------------------------------------
+
+@each $breakpoint-key, $breakpoint in $breakpoints-map {
+	@if $breakpoint-key != "" { $breakpoint: #{$breakpoint-delimiter}#{$breakpoint}; }
+	@include breakpoint($breakpoint-key) {
+
+		@include grid($breakpoint);
+		@include grid-auto-row($breakpoint);
+
+		@include grid-cols($breakpoint);
+		@include grid-rows($breakpoint);
+
+		@include grid-full($breakpoint);
+
+		@include columns($breakpoint);
+		@include rows($breakpoint);
+	}
+}

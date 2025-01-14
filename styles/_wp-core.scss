@@ -1,0 +1,54 @@
+/* ====================================================================================
+
+	WordPress TinyMCE styles
+
+==================================================================================== */
+
+.aligncenter {
+	display: block;
+
+	margin-top:    2rem;
+	margin-bottom: 2rem;
+	margin-left:   auto;
+	margin-right:  auto;
+}
+
+.alignleft,
+.alignright {
+	margin-top:    1rem;
+	margin-bottom: 1rem;
+}
+
+p:first-child {
+	.aligncenter,
+	.alignleft,
+	.alignright {
+		margin-top: 0;
+	}
+}
+
+p:last-child {
+	.aligncenter,
+	.alignleft,
+	.alignright {
+		margin-bottom: 0;
+	}
+}
+
+@include media(">=sm") {
+
+	.alignleft {
+		float: left;
+		max-width: 50%;
+		margin-right: 2rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.alignright {
+		float: right;
+		max-width: 50%;
+		margin-left: 2rem;
+		margin-bottom: 1.5rem;
+	}
+
+}

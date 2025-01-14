@@ -1,0 +1,196 @@
+/* ====================================================================================
+
+	Utility classes (the ones that don't fit anywhere else)
+
+==================================================================================== */
+
+.overflow-hidden {
+	overflow: hidden;
+}
+
+// --------------------
+// Elevated links
+// --------------------
+
+// Allows you to click a link beneath a.cover elements
+.elevated-links a {
+	position: relative;
+	z-index: 14;
+}
+
+// --------------------
+// Overlay
+// --------------------
+.overlay-linear {
+	background: linear-gradient(193deg, rgba(0, 0, 0, 0.00) 4.88%, rgba(0, 0, 0, 0.62) 51.44%);
+}
+
+@include media(">=md") {
+
+	.overlay-linear {
+		background: linear-gradient(90deg, rgba(0, 0, 0, 0.74) 12.2%, rgba(0, 0, 0, 0.00) 67.32%);
+	}
+
+}
+
+// --------------------
+// Hover zoom images
+// --------------------
+
+.hover-zoom .aspect,
+.hover-zoom img {
+	transition: #{"transform var(--trans-dur) var(--trans-func)"};
+}
+
+.hover-zoom:hover img,
+.hover-zoom:focus-within img {
+	transform: scale(1.04);
+}
+
+// -------------------------------
+// Underlines
+// -------------------------------
+
+.link-underlines a {
+	text-decoration: underline;
+}
+
+.link-underlines a:hover {
+	text-decoration: none;
+}
+
+.link-underlines-on-hover a {
+	text-decoration: none;
+}
+
+.link-underlines-on-hover a:hover {
+	text-decoration: underline;
+}
+
+.no-link-underlines a {
+	text-decoration: none;
+}
+
+
+// -------------------------------
+// Display
+// -------------------------------
+
+// Similar: .flex-row
+.flex {
+	display: flex;
+}
+
+.iblock {
+	display: inline-block;
+}
+
+
+// -------------------------------
+// Position
+// -------------------------------
+
+@each $breakpoint-key, $breakpoint in $breakpoints-map {
+	@if $breakpoint-key != "" { $breakpoint: #{$breakpoint-delimiter}#{$breakpoint}; }
+	@include breakpoint($breakpoint-key) {
+
+		.abspos#{$breakpoint} {
+			position: absolute;
+		}
+
+		.relpos#{$breakpoint} {
+			position: relative;
+		}
+
+	}
+}
+
+
+// -------------------------------
+// Z-index
+// -------------------------------
+.z-index-11 {
+	z-index: 11;
+}
+
+.z-index-10 {
+	z-index: 10;
+}
+
+.z-index-1 {
+	z-index: 1;
+}
+
+
+// -------------------------------
+// No mouse events
+// -------------------------------
+.no-interaction {
+	user-select: none;
+	pointer-events: none;
+}
+
+// -------------------------------
+// Hyphenation
+// -------------------------------
+// Break super-long words onto multiple lines, but only if absolutely necessary (i.e. if it would exceed container even *after* wrapping)
+.break-word {
+	word-break:    break-word !important;
+	word-wrap:     break-word !important;
+	overflow-wrap: break-word !important;
+}
+
+
+// -------------------------------
+// Disable page scroll
+// -------------------------------
+// Must be set on <html> for Safari's sake.
+html.scroll-lock {
+	overflow: hidden;
+}
+
+
+// -------------------------------
+// Text aliasing
+// -------------------------------
+.thin-type {
+	@include ThinType();
+}
+
+.thick-type {
+	@include ThickType();
+}
+
+
+// -------------------------------
+// Icons
+// -------------------------------
+
+// TODO: Do we really want this?
+.icon-aspect-wrap {
+	max-width: 64px;
+}
+
+// TODO: use different class at section level
+.icon-aspect-wrap .aspect-spacer {
+	padding-bottom: 100% !important;
+}
+
+// -------------------------------
+// Hide =scrollbar
+// -------------------------------
+
+// Chrome
+.hide-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+
+// Edge
+.hide-scrollbar {
+	-ms-overflow-style: none;
+}
+
+// Firefox
+.hide-scrollbar {
+	scrollbar-width: none;
+}

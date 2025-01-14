@@ -1,0 +1,78 @@
+/* ====================================================================================
+
+	Share & Connect buttons
+
+==================================================================================== */
+
+.icon-links {
+	--link-size: 36px;
+	--icon-size: 16px;
+
+	display: flex;
+	gap: 16px;
+}
+
+// <ul>
+// .icon-links {
+// 	margin: #{"calc(var(--link-marg) * -1)"};
+// }
+
+// <li>
+.icon-link {
+	width:  var(--link-size);
+	height: var(--link-size);
+	// margin: var(--link-marg);
+}
+
+.icon-link a,
+.icon-link svg {
+	width: var(--link-size);
+}
+
+.icon-link span,
+.icon-link svg {
+	display: flex;
+	width:  var(--icon-size);
+	height: var(--icon-size);
+}
+
+.icon-link span {
+	margin-left: 1px;
+}
+
+.icon-link a {
+	display: flex;
+	height: var(--link-size);
+	border-radius: 50%;
+	padding: 4px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+
+	background-color: var(--secondary-color);
+	color: var(--primary-color);
+
+	transition-property: all;
+}
+
+.icon-link a:focus-visible,
+.icon-link a:hover {
+	background-color: var(--primary-color);
+	color: var(--white);
+}
+
+@each $breakpoint-key, $breakpoint in $breakpoints-map {
+	@if $breakpoint-key != "" { $breakpoint: #{$breakpoint-delimiter}#{$breakpoint}; }
+	@include breakpoint($breakpoint-key) {
+
+		.icon-links--vertical#{$breakpoint} {
+			flex-flow: column;
+		}
+
+		.icon-links--horizontal#{$breakpoint} {
+			flex-flow: row wrap;
+		}
+
+	}
+}

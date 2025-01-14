@@ -1,0 +1,79 @@
+/* ====================================================================================
+
+	Table of Contents
+
+==================================================================================== */
+
+.toc {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+.toc--main {
+	grid-row-end: 99;
+	position: relative;
+	opacity: 0;
+}
+
+.menu--toc {
+	width: clamp(156px, 100%, 220px);
+	gap: clamp(20px, 2.58vh, 24px);
+}
+
+.toc--main .menu--toc {
+	position: sticky;
+	top: 50%;
+	align-self: flex-start;
+	transform: translate(0px, -50%);
+}
+
+.toc--main .toc + .section {
+	grid-row: 1 / span 1;
+}
+
+.toc__item {
+	padding-right: 34px;
+	a {
+		position: relative;
+
+		&::before {
+			content: '';
+
+			position: absolute;
+			top:      3px;
+			right:    -34px;
+
+			width:  12px;
+			height: 12px;
+
+			border-radius: 100px;
+
+			background-color: var(--white);
+		}
+		&:hover::before {
+			outline:        2px solid var(--secondary-color);
+			outline-offset: 3px;
+		}
+	}
+}
+
+.toc--main .toc__item a {
+	&::before {
+		background-color: var(--primary-color);
+	}
+	&.active::before {
+		outline:        2px solid var(--secondary-color);
+		outline-offset: 3px;
+	}
+}
+
+.toc--hero {
+    position: absolute;
+    z-index:  10;
+
+    right: 0;
+    top:   50%;
+
+	transform: translate(0px, -50%);
+}

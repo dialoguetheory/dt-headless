@@ -3,4 +3,8 @@ const { withFaust, getWpHostname } = require('@faustwp/core');
 /**
  * @type {import('next').NextConfig}
  **/
-module.exports = withFaust({});
+module.exports = withFaust({
+  images: {
+    domains: [getWpHostname(), 'dt-headless-wp.local'],
+  },
+});

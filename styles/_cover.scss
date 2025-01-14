@@ -1,0 +1,33 @@
+/* ====================================================================================
+
+	Cover an area with something else
+
+	(Utility class for links, tint layers, etc.)
+
+==================================================================================== */
+
+// Area it covers
+.cover-area {
+	position: relative;
+}
+
+// Cover element
+.cover {
+	display: block;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9;
+}
+
+.has-play-btn .play-btn {
+	position: absolute;
+	left: 30%;
+	top: 50%;
+	margin-top:  #{"calc(var(--play-btn-size) * -0.5)"};
+	z-index: 20;
+}

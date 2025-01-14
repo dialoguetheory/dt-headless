@@ -1,0 +1,126 @@
+/* ====================================================================================
+
+	Color variables, mixins, functions
+
+	@related: colors
+
+==================================================================================== */
+
+// ------------------------------------------------
+// Basic colors
+// ------------------------------------------------
+
+:root {
+
+	--black:     #000000;
+	--white:     #ffffff;
+	--gray:      #A5A5A5;
+	--gainsboro: #F2F2F2;
+	--off-white: #FCFCFC;
+	--raisin:    #231F20; // Used once in mockup in form underline
+
+	// -------------
+	// Site specific
+	// -------------
+	--primary-color:   #00265F; // blue
+	--secondary-color: #1EE491; // green
+
+	--status-error:   #FF0000;
+	--status-warn:    #FF9900;
+	--status-info:    #0099FF;
+	--status-success: #00BB00;
+
+}
+
+// (.dark-area overrides the :root-level WPForms defaults at bottom of <head>, since we add .dark-area to <html>)
+.dark-area {
+	--wpforms-field-background-color:  var(--black);             // WPForms default: #ffffff;
+	--wpforms-field-border-color:      var(--gainsboro);              // WPForms default: rgba( 0, 0, 0, 0.25 );
+	--wpforms-field-text-color:        var(--white);             // WPForms default: rgba( 0, 0, 0, 0.7 );
+	--wpforms-label-color:             var(--white);             // WPForms default: rgba( 0, 0, 0, 0.85 );
+	--wpforms-label-sublabel-color:    var(--white);             // WPForms default: rgba( 0, 0, 0, 0.55 );
+	--wpforms-label-error-color:       var(--status-error);
+	--wpforms-button-background-color: var(--accent-color-bold); // WPForms default: #066aab;
+	--wpforms-button-text-color:       var(--black);             // WPForms default: #ffffff;
+}
+
+// ------------------------------------------------
+// Contextual colors
+// ------------------------------------------------
+.dark-area .light-area, // support limited levels of color nesting (though best to avoid that when possible)
+:root {
+
+	--fg-color: var(--black);
+	--pre-heading-color: var(--primary-color);
+
+	--h1-color: var(--primary-color);
+	--h2-color: var(--primary-color);
+	--h3-color: var(--primary-color);
+	--h4-color: var(--primary-color);
+	--h5-color: var(--primary-color);
+
+	// Links
+	--link-color: var(--primary-color);
+
+	// Focus
+	--focus-color: var(--black);
+
+	// Forms
+	--field-bg-color:     transparent;
+	--field-border-color: var(--raisin);
+	// Solid CTAs
+	--cta-color-bg: var(--secondary-color);
+	--cta-color-fg: var(--primary-color);
+
+	// Arrows
+	--cta-arrow:      url('../images/arrow-right-blue.svg');
+	--cta-arrow-down: url('../images/arrow-down-blue.svg');
+
+	// Play
+	--play-icon: url('../images/play-lightbox.svg');
+
+}
+
+.dark-area .light-area .dark-area, // support limited levels of color nesting (though best to avoid when possible)
+.dark-area {
+
+	// Text
+	--fg-color: var(--white);
+	--pre-heading-color: var(--white);
+
+	--h1-color: var(--white);
+	--h2-color: var(--white);
+	--h3-color: var(--white);
+	--h4-color: var(--white);
+	--h5-color: var(--white);
+
+	// Links
+	--link-color: var(--white);
+
+	// Focus
+	--focus-color: var(--white);
+
+	// Solid CTAs
+	--cta-color-bg: var(--secondary-color);
+	--cta-color-fg: var(--primary-color);
+
+	// Arrows
+	--cta-arrow:      url('../images/arrow-right-blue.svg');
+	--cta-arrow-down: url('../images/arrow-down-blue.svg');
+
+	// Forms
+	--field-bg-color:     transparent;
+	--field-border-color: var(--gainsboro);
+
+}
+
+
+// ------------------------------------------------
+// =Social =Sharing
+// ------------------------------------------------
+:root {
+	--color-email:    #005DAB;
+	--color-facebook: #507CBE;
+	--color-twitter:  #63CDF1;
+	--color-linkedin: #90CADD;
+}

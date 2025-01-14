@@ -1,0 +1,192 @@
+/* ====================================================================================
+
+	Accessibility
+
+==================================================================================== */
+
+// ------------------------------------------------
+// Disables animations if prefers-reduced-motion
+//
+// That said, *reduced* motion doesn't mean no motion–this is only a bare minimum starting point.
+//
+// https://css-tricks.com/revisiting-prefers-reduced-motion-the-reduced-motion-media-query/
+// ------------------------------------------------
+
+@media screen and
+	(prefers-reduced-motion: reduce),
+	(update: slow) {
+	* {
+		--trans-dur:      0.001ms !important;
+		--trans-dur-slow: 0.001ms !important;
+		--trans-dur-fast: 0.001ms !important;
+
+		animation-duration:        0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration:       0.001ms !important;
+	}
+}
+
+
+// ------------------------------------------------
+// .focus-visible / :focus-visible
+//
+// Polyfill:
+// @link npmjs.com/package/focus-visible
+//
+// (WHY WE'RE USING MIXINS: We can't chain .focus-visible & :focus-visible selectors together because because browsers without :focus-visible support (older iOS devices) will then skip the whole rule.)
+// ------------------------------------------------
+
+@mixin FocusVisible() {
+	outline: #{"2px solid var(--focus-color)"};
+	outline-color: var(--focus-color);
+	outline-offset: var(--focus-offset);
+	transition-duration: 0s !important;
+}
+
+@mixin FocusVisibleJSOnly() {
+	outline-offset: #{"calc(var(--focus-offset) * -1)"};
+}
+
+// Focus added by anything EXCEPT keyboard navigation
+.js-focus-visible :focus:not(.focus-visible) {
+	outline: none;
+}
+
+// Focus added by ANY method, incl. keyboard navigation
+.js-focus-visible .focus-visible {
+	@include FocusVisible();
+}
+.js-focus-visible :focus-visible,
+:focus-visible {
+	@include FocusVisible();
+}
+
+// Focus added by JS
+.js-focus-visible [tabindex="-1"].focus-visible {
+	@include FocusVisibleJSOnly();
+}
+.js-focus-visible [tabindex="-1"]:focus-visible,
+[tabindex="-1"]:focus-visible {
+	@include FocusVisibleJSOnly();
+}
+
+
+/*-----------------------------------------------------------------------------------*/
+/*	=Screen Reader Text
+/*-----------------------------------------------------------------------------------*/
+
+@mixin ScreenReaderText() {
+
+	// http://rachievee.com/applications-screen-reader-text-class/
+	// https://make.wordpress.org/accessibility/handbook/markup/the-css-class-screen-reader-text/
+	border: 0;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	word-wrap: normal !important;
+
+	// Reduce risk of loading an extra font weight we may not need (e.g. a visually-hidden H1): https://twitter.com/csswizardry/status/1436361516534620168
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+
+}
+
+.screen-reader-text-until-focus:not(.focus-visible),
+.screen-reader-text {
+	@include ScreenReaderText();
+}
+
+// SAFARI SUPPORT:
+// "Safari :focus-within doesn't match a container when a button, link, or non-text input is clicked. If the user is focused on a text input (matching :focus-within selector for its container) and then clicks on one of these elements, the focus leaves the container entirely."
+.screen-reader-text-until-focus-within:not(:focus-within) {
+	@include ScreenReaderText();
+}
+
+@include media("<sm") {
+	.screen-reader-text#{$breakpoint-delimiter}smmax {
+		@include ScreenReaderText();
+	}
+}
+@include media("<md") {
+	.screen-reader-text#{$breakpoint-delimiter}mdmax {
+		@include ScreenReaderText();
+	}
+}
+@include media("<lg") {
+	.screen-reader-text#{$breakpoint-delimiter}lgmax {
+		@include ScreenReaderText();
+	}
+}
+
+
+
+/*-----------------------------------------------------------------------------------*/
+/*	=Skip links
+/*	for keyboard navigation & switch navigation
+/*-----------------------------------------------------------------------------------*/
+
+body .skip-link:focus,
+body .skip-link:hover,
+body .skip-link {
+	background-color: var(#ffffff);
+	color: var(#000000);
+	outline-color: var(#ffffff);
+}
+
+.skip-link {
+
+	// gov.uk
+	position: absolute;
+	left: -9999px;
+
+	// (Source unknown)
+	top: auto;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+
+	// So Pagespeed Insights doesn't tell us to preload this font
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+
+}
+
+// No need for focus-visible since these are visually hidden by default
+.skip-link:focus {
+
+	// Source 1: http://rachievee.com/applications-screen-reader-text-class/
+	// Source 2: https://make.wordpress.org/accessibility/handbook/markup/the-css-class-screen-reader-text/
+	clip: auto !important;
+	clip-path: none;
+	display: block;
+	height: auto;
+	left: 5px;
+	line-height: normal;
+	padding: 15px 23px 14px;
+	text-decoration: none;
+	top: 5px;
+	width: auto;
+	z-index: 100000;
+
+}
+
+// .skip-link--inline {}
+
+.skip-link--inline:focus {
+	display: inline-block;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	width: auto;
+	position: relative;
+	// max-width: 400px;
+	left: 0;
+	// position: absolute;
+	// left: auto;
+	// right: auto;
+	// top: auto;
+	// bottom: auto;
+}

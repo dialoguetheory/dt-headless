@@ -1,0 +1,34 @@
+/* ====================================================================================
+
+	_tippy.scss
+
+==================================================================================== */
+
+.tippy-box {
+	background-color: var(--gainsboro);
+	border-radius:    0;
+
+	min-width: 280px;
+}
+
+.tippy-content {
+	padding: 0;
+}
+
+.tooltip__close {
+	outline-offset: -2px !important;
+
+	width:  24px;
+	height: 24px;
+
+	&:focus-visible {
+		outline-color: var(--white);
+	}
+	&:not(:focus-visible) {
+		outline: none !important;
+	}
+	* {
+		pointer-events: none
+	}
+
+}

@@ -1,0 +1,111 @@
+/* ====================================================================================
+
+	_loop.scss
+
+==================================================================================== */
+
+// =======================
+// State
+// =======================
+.hide-results .section--loop-results {
+	display: none;
+}
+
+.updating-results .pagination,
+.updating-results .section--scroll-cards,
+.updating-results .section--loop-filters,
+.updating-results .results {
+	opacity: .8;
+	@include Grayscale();
+}
+
+.updating-results * {
+	cursor: progress;
+}
+
+/* ====================================================================================
+
+	Loop =Results [Section]
+
+==================================================================================== */
+
+.loop-results {
+	row-gap: 3.5rem;
+}
+
+.loop-results + .pagination {
+	margin-top: 3rem;
+}
+
+.updating-results .pagination svg {
+	animation: spin 2s linear infinite;
+}
+
+.pagination__link {
+	--fg-color: var(--primary-color);
+	gap: 8px;
+	p {
+		font-size:  .825rem;
+		font-weight: 700;
+	}
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.section--loop-results .aspect-spacer {
+	background-color: var(--gainsboro);
+}
+
+@include media(">=sm") {
+
+	.loop-results{
+		row-gap: 3rem;
+	}
+
+}
+
+// =======================
+// =Posts
+// =======================
+.loop-results--post {
+	row-gap: 1.5rem;
+}
+
+@include media("<md") {
+
+	.section--loop-post {
+		margin-top: 5rem;
+	}
+
+}
+
+@include media(">=md") {
+
+	.loop-results--post {
+		row-gap: 3rem;
+	}
+
+}
+
+// =======================
+// =Filters for news loop
+// =======================
+
+.section--news-filters {
+	--section-pad-btm: 3.5rem;
+}
+
+@include media(">=md") {
+
+	.section--news-filters {
+		--section-pad-btm: 5.375rem;
+	}
+
+}

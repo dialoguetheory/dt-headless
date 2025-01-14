@@ -1,0 +1,22 @@
+/* ====================================================================================
+
+	Strict-break
+
+	Helper for when you want a break after floating something left or right within a wysiwyg field
+
+==================================================================================== */
+.strict-break {
+	display: block;
+	clear: both;
+	height: 1px;
+	// visibility: hidden; // this causes problems if formatting isn't exactly right
+}
+
+.strict-break {
+	margin-top:    #{"calc(var(--vert-marg) * -1)"};
+	margin-bottom: #{"calc(var(--vert-marg) * -1)"};
+}
+
+// .strict-break + p {
+// 	margin-top: 0;
+// }

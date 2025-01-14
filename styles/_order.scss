@@ -1,0 +1,40 @@
+/* ====================================================================================
+
+	Visual ordering
+
+	(for responsiveness & accessibility)
+
+	Adjust Reading Order (to be different from DOM order)
+
+	For design patterns that violate most accessible **reading** order, such as a label just before a heading within a <section> or <article>
+	@link https://dequeuniversity.com/checklists/web/reading-focus-order
+	Not to be confused with focus order, which should match the visual order
+
+==================================================================================== */
+
+// ================================================
+// DOM ordering
+// @based on https://getuikit.com/docs/flex#item-order
+// Useful for mobile-desktop design changes
+// ================================================
+
+// .visually-first {}
+
+@each $breakpoint-key, $breakpoint in $breakpoints-map {
+	@if $breakpoint-key != "" { $breakpoint: #{$breakpoint-delimiter}#{$breakpoint}; }
+	@include breakpoint($breakpoint-key) {
+
+		.visually-first#{$breakpoint} {
+			order: -1;
+		}
+
+		.visually-last#{$breakpoint} {
+			order: 99;
+		}
+
+		.visually-default#{$breakpoint} {
+			order: 0;
+		}
+
+	}
+}

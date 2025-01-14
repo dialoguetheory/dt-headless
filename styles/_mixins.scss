@@ -1,0 +1,314 @@
+/* ====================================================================================
+
+	Mixins (General)
+
+	(Note that many of our _*-vars.scss files also have mixins, especially text-related.)
+
+==================================================================================== */
+
+/*-----------------------------------------------------------------------------------*/
+/*	Select Arrow
+/*-----------------------------------------------------------------------------------*/
+@mixin SelectArrow($color: 'black') {
+
+	border: 0;
+	width: var(--select-chevron-w);
+	height: var(--select-chevron-h);
+	background-image: url('../images/chevron-down-select-dark-blue.svg');
+	background-position: #{"var(--select-chevron-w) var(--select-chevron-h)"};
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: contain;
+	margin-left: #{"calc(var(--select-chevron-w) * -.5)"};
+	margin-top: #{"calc(var(--select-chevron-h) * -.5)"};
+
+	@if $color == 'white' {
+		background-image: url('../images/chevron-down-select-white.svg');
+	}
+
+	@if $color == 'dark-blue' {
+		background-image: url('../images/chevron-down-select-dark-blue.svg');
+	}
+}
+
+/*-----------------------------------------------------------------------------------*/
+/*	Hide scrollbar
+/*-----------------------------------------------------------------------------------*/
+
+@mixin HideScrollbar() {
+	-ms-overflow-style: none;
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+
+/*-----------------------------------------------------------------------------------*/
+/*	=Breakpoints
+/*-----------------------------------------------------------------------------------*/
+
+@mixin breakpoint($breakpoint) {
+
+	@if $breakpoint == "" {
+		@content;
+	}
+
+	@else {
+
+		// Retrieves the value from the key
+		$value: map-get($breakpoints, $breakpoint);
+
+		// If the key exists in the map
+		@if $value != null {
+
+			// Print a media query based on the value
+			@media (min-width: $value) {
+				@content;
+			}
+
+		}
+
+		// If the key doesn't exist in the map
+		@else {
+
+			@warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+				+ "Please make sure it is defined in `$breakpoints` map.";
+
+		}
+
+	}
+
+}
+
+
+/* -----------------------------------------------------------------------------------
+
+	# Line clamp
+
+	Truncate 1-liners with "..."
+
+	## Notes
+
+	Depending on font, items using this may need a bottom padding. Example:
+
+	.ticker a {
+		@include Truncate();
+		// Don't get cut off by line clamp
+		padding-bottom: 1px;
+		position: relative;
+		top: -1px;
+	}
+
+	When adding to links, make sure you add to the <a>, not the container, or else the ellipsis may be a different color
+
+----------------------------------------------------------------------------------- */
+
+@mixin Truncate() {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+	overflow: hidden;
+}
+
+
+/*-----------------------------------------------------------------------------------*/
+/* Font =aliasing
+/*-----------------------------------------------------------------------------------*/
+
+@mixin ThinType(){
+	-webkit-font-smoothing: antialiased;
+	font-smoothing:         antialiased;
+	text-rendering: optimizeLegibility;
+	// -moz-osx-font-smoothing: grayscale; // 2020 update: best not to use this
+}
+
+@mixin ThickType(){
+	-webkit-font-smoothing: subpixel-antialiased;
+	font-smoothing:         subpixel-antialiased;
+}
+
+
+/*-----------------------------------------------------------------------------------*/
+/* =BG/img stretch & fill
+/*-----------------------------------------------------------------------------------*/
+
+@mixin Filler(){
+	display: block;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 2;
+}
+
+@mixin Cover(){
+	@include Filler();
+	background: #{"var(--white) no-repeat center center"};
+	z-index: 1000;
+}
+
+@mixin BgFiller(){
+	@include BgCover();
+	@include Filler();
+	background-repeat: no-repeat;
+	// background-position: center center; // needed
+	position: absolute;
+	z-index: 0;
+}
+
+@mixin ObjectFiller(){
+	object-fit: cover;
+	object-position: center center;
+	@include Filler();
+	position: absolute;
+	z-index: 0;
+}
+
+// Add to <video> elem
+@mixin BGVidCover(){
+	position: absolute;
+	z-index: -1000;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	max-height: 9999px;
+	object-fit: cover;
+	object-position: top;
+}
+
+// Add to <video> elem
+@mixin BGVidContain(){
+	position: absolute;
+	z-index: -1000;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	max-height: 9999px;
+
+	object-fit: contain;
+	object-position: center;
+	background-color: transparent;
+}
+
+// IE11 objectfit fallback
+@mixin BGVidCoverIE(){
+	position: absolute; // can be fixed or absolute but absolute is better for runtime perf
+	bottom: 0px;
+	right: 0px;
+	min-width: 100%;
+	min-height: 100%;
+	width: auto;
+	height: auto;
+	z-index: -1000;
+	overflow: hidden;
+	max-height: 9999px;
+	max-width: 9999px;
+}
+
+
+/*-----------------------------------------------------------------------------------*/
+/*	=Grayscale, =Blur, and other =Filters
+/*-----------------------------------------------------------------------------------*/
+
+@mixin NoFilter(){
+	-webkit-filter: none;
+	   -moz-filter: none;
+	    -ms-filter: none;
+	     -o-filter: none;
+	        filter: none;
+	// filter: url(grayscale.svg); // Firefox 4+, but messes up newer Chromes
+	// filter: gray; // IE 6-9
+}
+
+@mixin NoGrayscale(){
+	@include NoFilter();
+}
+
+@mixin Grayscale(){
+	-webkit-filter: grayscale(100%);
+	   -moz-filter: grayscale(100%);
+	    -ms-filter: grayscale(100%);
+	     -o-filter: grayscale(100%);
+	        filter: grayscale(100%);
+	// filter: url(grayscale.svg); // Firefox 4+, but messes up newer Chromes
+	filter: gray; // IE 6-9
+}
+
+
+/*-----------------------------------------------------------------------------------*/
+/* No select
+/*-----------------------------------------------------------------------------------*/
+
+// Make text not selectable/highlightable
+/*
+@mixin NoSelect(){
+	-webkit-touch-callout: none;
+	  -webkit-user-select: none;
+	   -khtml-user-select: none;
+	     -moz-user-select: none;
+	      -ms-user-select: none;
+	          user-select: none;
+}
+*/
+
+
+/*-----------------------------------------------------------------------------------*/
+/*	=Retina
+/*-----------------------------------------------------------------------------------*/
+
+/*
+// Retina media query
+@mixin retina-media-query {
+	@media
+		only screen and (-webkit-min-device-pixel-ratio: 2),
+		only screen and (min--moz-device-pixel-ratio: 2),
+		only screen and (-moz-min-device-pixel-ratio: 2),
+		only screen and (-o-min-device-pixel-ratio: 2/1),
+		only screen and (min-device-pixel-ratio: 2),
+		only screen and (min-resolution: 192dpi),
+		only screen and (min-resolution: 2dppx) {
+		@content;
+	}
+}
+*/
+
+/*-----------------------------------------------------------------------------------*/
+/*	=Fluid
+
+	https://www.smashingmagazine.com/2022/10/fluid-typography-clamp-sass-functions/
+
+	Usage:
+	font-size: #{fluid(16px, 31px)};
+	font-size: #{fluid(40px, 63px, $breakpoint-sm, $breakpoint-lg)};
+
+/*-----------------------------------------------------------------------------------*/
+$default-min-bp: $breakpoint-md;
+$default-max-bp: $breakpoint-xl;
+
+@function round($number, $decimals: 0) {
+	$n: 1;
+	@if $decimals > 0 {
+		@for $i from 1 through $decimals {
+			$n: $n * 10;
+		}
+	}
+	@return math.div(math.round($number * $n), $n);
+}
+
+@function px-to-rem($px) {
+	$rems: math.div($px, 16px) * 1rem;
+	@return $rems;
+}
+
+@function fluid($min-size, $max-size, $min-breakpoint: $default-min-bp, $max-breakpoint: $default-max-bp, $unit: vw) {
+	$slope: math.div($max-size - $min-size, $max-breakpoint - $min-breakpoint);
+	$slope-to-unit: round($slope * 100, 2);
+	$intercept-rem: round(px-to-rem($min-size - $slope * $min-breakpoint), 2);
+	$min-size-rem: if($min-size == 0, 0rem, round(px-to-rem($min-size), 2));
+	$max-size-rem: round(px-to-rem($max-size), 2);
+	@return clamp(#{$min-size-rem}, #{$slope-to-unit}#{$unit} + #{$intercept-rem}, #{$max-size-rem});
+}
+

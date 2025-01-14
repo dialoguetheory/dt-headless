@@ -1,0 +1,50 @@
+
+/* ====================================================================================
+
+	# Convert px to rem
+
+	Example: font-size: rem(32px); compiles to font-size: 2rem;
+
+	@link https://github.com/Automattic/jetpack-wordads/blob/1df0dc833a4cb081cebfe8344e1593db19720eb7/src/dashboard/scss/functions/rem.scss
+
+	Why? Respects user's font size browser pref. (All major browser/OS combos use 16px as their default.)
+
+	@see https://www.w3.org/WAI/WCAG21/Understanding/resize-text.html
+	@see https://www.w3.org/WAI/WCAG21/Techniques/failures/F94.html
+	@see https://adrianroselli.com/2019/12/responsive-type-and-zoom.html
+	@see https://css-tricks.com/snippets/css/less-mixin-for-rem-font-sizing/
+
+==================================================================================== */
+
+@use "sass:math";
+
+// Truncate to nearest decimal place we specify
+// @see https://stackoverflow.com/a/76136073
+// e.g. truncate-float(3.2525145, 2) returns 3.25
+@function truncate-float($value, $places) {
+	$radix: 10;
+	$num: 1;
+	$result : 0;
+
+	@for $i from 1 through $places {
+		$num: $num * $radix;
+	}
+
+	$result: math.div(math.floor($value * $num), $num);
+
+	@return $result;
+}
+
+// 16px is default of all major browser/OS combos
+$root-font-size: 16px;
+
+/**
+ * A mixin to apply a transition
+ *
+ * @mixin rem
+ * @param {String} $pixels  - Pixel value to convert to rems
+ * @param {String} $context - Assumed root font-size
+ */
+@function rem( $pixels, $decimal-places: 2, $context: $root-font-size ) {
+	@return truncate-float(math.div($pixels, $context), $decimal-places) * 1rem;
+}

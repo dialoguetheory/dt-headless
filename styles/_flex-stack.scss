@@ -1,0 +1,23 @@
+/* ====================================================================================
+
+	Flex stack
+
+	3-row header-body-footer effect for cards
+
+==================================================================================== */
+
+.flex-stack {
+	display: flex;
+	flex-direction: column;
+}
+
+.flex-stack>* {
+	flex: 1;
+}
+
+// Align last row to bottom
+.flex-stack>*:last-child {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+}

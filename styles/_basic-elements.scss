@@ -1,0 +1,123 @@
+/* ====================================================================================
+
+	Basic elements
+
+	html, body, bolding, etc.
+
+==================================================================================== */
+
+*, *:after, *:before {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+html,
+body {
+	height: 100%;
+	min-height: var(--vh100);
+	word-wrap: break-word;
+	text-rendering: optimizeSpeed;
+}
+
+html {
+
+	margin: 0;
+
+	scroll-padding-top: var(--scroll-pad-top);
+
+	scroll-behavior: smooth;
+
+	// Enable fast-tap for iOS
+	-ms-touch-action: manipulation;
+	touch-action:     manipulation;
+
+}
+
+html.smooth-scroll-off {
+	scroll-behavior: auto;
+}
+
+@media screen and (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+body {
+	background-color: transparent;
+}
+
+// ----------------------------------------------
+// Blockquote
+// ----------------------------------------------
+blockquote {
+	margin: 0;
+}
+
+// For more, see: _blockquotes.scss
+
+// ----------------------------------------------
+// Images
+// ----------------------------------------------
+svg, img {
+	max-width: 100%;
+	height: auto;
+}
+
+figure {
+	max-width: 100%;
+	margin: 0;
+}
+
+// ----------------------------------------------
+// Embeds
+// ----------------------------------------------
+iframe, video, audio, canvas, embed, object {
+	max-width: 100%;
+}
+
+// ----------------------------------------------
+// Line breaks
+// ----------------------------------------------
+hr {
+	border-style: none;
+	border-top-width: .3rem;
+	border-top-style: solid;
+	border-top-color: var(--black);
+	height: 1px;
+}
+
+.dark-area hr {
+	border-top-color: inherit;
+}
+
+// ----------------------------------------------
+// Hilite / mark
+// ----------------------------------------------
+mark {
+	background-color: var(--accent-color-bold);
+	color: var(--white);
+	padding: .2rem .6rem;
+}
+
+
+// ----------------------------------------------
+// Small
+// ----------------------------------------------
+figcaption,
+small {
+	font-size: .7rem;
+}
+
+// ----------------------------------------------
+// Superscript
+// (citations/exponents)
+// ----------------------------------------------
+sup {
+	font-size: .7rem;
+}
+
+// ----------------------------------------------
+// Tables
+// ----------------------------------------------
+table img { max-width: none; } // Fixes Chrome bug

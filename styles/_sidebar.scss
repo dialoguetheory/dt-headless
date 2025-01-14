@@ -1,0 +1,48 @@
+/* ====================================================================================
+
+	Sidebar
+
+==================================================================================== */
+
+$sideboxes-marg-top: 3rem;
+
+.sideboxes--sticky {
+	margin-top: $sideboxes-marg-top;
+}
+
+.sidebar {
+	position: relative;
+	margin-top: $sideboxes-marg-top;
+}
+
+.sidebox__title {
+	--fg-color: var(--primary-color);
+}
+
+@include media(">=md") {
+
+	.sidebar {
+		margin-top: unset;
+	}
+
+	.sideboxes--sticky {
+		position: -webkit-sticky;
+		position: sticky;
+		top: $sideboxes-marg-top;
+		margin-top: 0;
+	}
+
+}
+
+// "highlight text"
+.sidebox mark {
+	white-space: nowrap;
+}
+
+// ------------------------
+// Sidebox
+// ------------------------
+.sidebox__ctas {
+	row-gap: 2rem;
+	margin-top: 4rem;
+}

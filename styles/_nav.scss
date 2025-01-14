@@ -1,0 +1,23 @@
+/* ====================================================================================
+
+	Nav
+
+==================================================================================== */
+
+.nav--filter-links {
+	row-gap: 1rem;
+}
+
+.nav--filter-links ul {
+	column-gap: 1rem;
+	row-gap: .5rem;
+}
+
+@include media(">=md") {
+
+	.nav--filter-links,
+	.nav--filter-links ul {
+		gap: 1.5rem;
+	}
+
+}

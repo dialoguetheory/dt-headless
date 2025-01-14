@@ -1,0 +1,135 @@
+/* ====================================================================================
+
+	Blockquotes
+
+==================================================================================== */
+
+.rt blockquote {
+	position: relative;
+
+	margin-top:  80px;
+	padding-top: 25px;
+
+	&::before {
+		content: '';
+
+		position: absolute;
+		top:      0;
+		left:     0;
+
+		width:  104px;
+		height: 80px;
+
+		box-sizing: content-box;
+
+		background-image: url(../images/quote-mark.svg);
+		background-size: contain;
+	}
+}
+
+.rt blockquote p {
+	position: relative;
+	z-index: 1;
+
+	color: var(--black);
+
+	font-size: 1.5rem;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 110%;
+}
+
+.rt blockquote + .blockquote__name,
+.rt blockquote + .blockquote__credentials {
+	padding-top: 24px;
+}
+
+.blockquote__name,
+.blockquote__credentials {
+	text-align: right;
+}
+
+.blockquote__name, // in case there is an issue in tinyMCE
+.blockquote__name p {
+	--fg-color: var(--primary-color);
+	@include BodyTextBig();
+}
+
+.blockquote__credentials {
+	padding-top: 8px
+}
+
+.rt blockquote + *:not(.blockquote__name):not(.blockquote__credentials),
+.blockquote__name + *:not(.blockquote__credentials),
+.blockquote__credentials + * {
+	margin-top: 80px !important;
+}
+
+@include media(">=md") {
+	.rt blockquote {
+		position: relative;
+		margin-top: 106px;
+		padding-top: 47px;
+		padding-left: calc( var(--grid-column-width) + calc( var(--column-gap) * 2 ) );
+		width: calc( 100% + 42px );
+
+		&::before {
+			left: calc( calc( var(--grid-column-width) + var(--column-gap) ) - calc(42px / var(--column-count)) );
+
+			width:  172px;
+			height: 132px;
+		}
+
+		&::after {
+			content: '';
+
+			position: absolute;
+			top:      0;
+			left:     0;
+
+			height: 100%;
+			width:  var(--border-w);
+
+			background: var(--primary-color);
+
+		}
+
+		p {
+			font-size: #{fluid(24px, 32px)};
+			line-height: 100%;
+		}
+
+	}
+
+	.rt blockquote + .blockquote__name,
+	.rt blockquote + .blockquote__credentials {
+		padding-top: 48px;
+	}
+
+	.blockquote__name,
+	.blockquote__credentials {
+		position: relative;
+		&::after {
+			content: '';
+
+			position: absolute;
+			top:      0;
+			left:     0;
+
+			height: 100%;
+			width:  var(--border-w);
+
+			background: var(--primary-color);
+
+		}
+
+	}
+
+	.rt blockquote + *:not(.blockquote__name):not(.blockquote__credentials),
+	.blockquote__name + *:not(.blockquote__credentials),
+	.blockquote__credentials + * {
+		margin-top: 112px !important;
+	}
+
+
+}

@@ -1,0 +1,128 @@
+/* ====================================================================================
+
+	_section.scss
+
+	Basics only. For individual sections, create a new partial.
+
+==================================================================================== */
+
+:root {
+
+	// NOTE: It may be that this var is worthless and we just have to use the -top and -btm vars. Overriding --section-pad-y at a narrower scope (e.g. .section--blah { --section-pad-y: 1px; }) does not appear to modify the -top and -btm versions for that narrower scope (which was the original goal here).
+	--section-pad-y: 60px;
+
+	--section-pad-top: var(--section-pad-y);
+	--section-pad-btm: var(--section-pad-y);
+
+}
+
+.section {
+	position: relative;
+	padding: #{"var(--section-pad-top) 0 var(--section-pad-btm)"};
+}
+
+.section__title {
+	--vert-marg: 0;
+}
+
+.section__header:not(.visually-hidden)+* {
+	margin-top: 2rem;
+}
+
+.section__title:not(.visually-hidden) ~ .section__desc {
+	margin-top: 1rem;
+}
+
+.bg-color-repeated {
+	--section-pad-top: 0;
+}
+
+@include media(">=md") {
+
+	:root {
+		--section-pad-y: 120px;
+		--section-pad-top: var(--section-pad-y);
+		--section-pad-btm: var(--section-pad-y);
+	}
+
+	.section__title {
+		--vert-marg: 0;
+	}
+
+	.section__title:not(.screen-reader-text) ~ .section__desc {
+		margin-top: 2rem;
+	}
+
+	.section__header:not(.screen-reader-text)+* {
+		margin-top: 3rem;
+	}
+
+}
+
+/* -----------------------------------------------------------------------------------
+
+	Full-viewport-height sections
+
+	------------------------------------------------------------------------------------
+
+	Quirks:
+
+	- Old IE and some more current iOS versions (APR 2018) don't calculate vh how you'd expect – so we do it with JS and set --vh100 property
+	- calc() doesn't work inside media queries until Chrome 66 (APR 2018)
+
+----------------------------------------------------------------------------------- */
+
+@each $breakpoint-key, $breakpoint in $breakpoints-map {
+	@if $breakpoint-key != "" { $breakpoint: #{$breakpoint-delimiter}#{$breakpoint}; }
+	@include breakpoint($breakpoint-key) {
+
+		.section--full-height#{$breakpoint} {
+			min-height: var(--vh100);
+		}
+
+	}
+}
+
+
+/*-----------------------------------------------------------------------------------*/
+/* Looking for .container (section inner width)?
+/*
+/* (comes directly within <section>, site <footer>, etc.)
+/*-----------------------------------------------------------------------------------*/
+
+// See: _grid.scss
+
+
+/*-----------------------------------------------------------------------------------*/
+/* Section BGs
+/*-----------------------------------------------------------------------------------*/
+
+.bg__wrap {
+	@include Filler();
+	z-index: 0;
+
+	// Helpful when image/video uses natural height (i.e. not object-fit); i.e. IE11
+	overflow: hidden;
+}
+
+// Cover bg wrap area
+.bg--cover {
+	@include ObjectFiller();
+	object-fit: cover;
+	object-position: center center;
+}
+
+// ================================================
+// =Scroll
+// ================================================
+.section-scroll-top,
+.section-scroll-trigger {
+	height: 0;
+}
+
+.grid .section-scroll-top,
+.grid .section-scroll-trigger {
+	grid-column: 1;
+	grid-row: 1;
+	align-self: start;
+}

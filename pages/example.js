@@ -1,51 +1,79 @@
-import { gql, useQuery } from "@apollo/client";
-import Head from "next/head";
-import Header from "../components/header";
-import EntryHeader from "../components/entry-header";
-import Footer from "../components/footer";
-import { getNextStaticProps } from "@faustwp/core";
+import { gql, useQuery } from '@apollo/client';
+import * as MENUS from '../constants/menus';
+import { SiteInfoFragment } from '../fragments/GeneralSettings';
+import {
+  Header,
+  Hero,
+  Footer,
+  Main,
+  Container,
+  NavigationMenu,
+  SEO,
+} from '../components';
+import { getNextStaticProps } from '@faustwp/core';
 
-/**
- * Next.js file based page example with Faust helpers.
- */
-export default function Page() {
-  const { data } = useQuery(Page.query);
+export default function Page(props) {
+  const { data } = useQuery(Page.query, {
+    variables: Page.variables(),
+  });
+  const title = props.title;
 
-  const { title: siteTitle, description: siteDescription } =
-    data.generalSettings;
-  const menuItems = data.primaryMenuItems.nodes;
+  const { title: siteTitle, description: siteDescription } = data?.generalSettings;
+  const primaryMenu = data?.headerMenuItems?.nodes ?? [];
+  const footerMenu = data?.footerMenuItems?.nodes ?? [];
 
   return (
     <>
-      <Head>
-        <title>{siteTitle}</title>
-      </Head>
-
+      <SEO title={siteTitle} description={siteDescription} />
       <Header
-        siteTitle={siteTitle}
-        siteDescription={siteDescription}
-        menuItems={menuItems}
+        title={siteTitle}
+        description={siteDescription}
+        menuItems={primaryMenu}
       />
-
-      <main className="container">
-        <EntryHeader title="Next.js Page Example" />
-        <p>Next.js pages are still supported!</p>
-      </main>
-
-      <Footer />
+      <Main>
+        <Container>
+          <Hero title={title} />
+          <div className="text-center">
+            <p>This page is utilizing the Next.js File based routes.</p>
+            <code>pages/example.js</code>
+          </div>
+        </Container>
+      </Main>
+      <Footer title={siteTitle} menuItems={footerMenu} />
     </>
   );
 }
 
 Page.query = gql`
-  ${Header.fragments.entry}
-  query GetHomePage {
-    ...HeaderFragment
+  ${SiteInfoFragment}
+  ${NavigationMenu.fragments.entry}
+  query GetPageData(
+    $headerLocation: MenuLocationEnum
+    $footerLocation: MenuLocationEnum
+  ) {
+    generalSettings {
+      ...SiteInfoFragment
+    }
+    headerMenuItems: menuItems(where: { location: $headerLocation }) {
+      nodes {
+        ...NavigationMenuItemFragment
+      }
+    }
+    footerMenuItems: menuItems(where: { location: $footerLocation }) {
+      nodes {
+        ...NavigationMenuItemFragment
+      }
+    }
   }
 `;
 
+Page.variables = () => {
+  return {
+    headerLocation: MENUS.PRIMARY_LOCATION,
+    footerLocation: MENUS.FOOTER_LOCATION
+  };
+};
+
 export function getStaticProps(ctx) {
-  return getNextStaticProps(ctx, {
-    Page,
-  });
+  return getNextStaticProps(ctx, {Page, props: {title: 'File Page Example'}});
 }

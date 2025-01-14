@@ -1,0 +1,139 @@
+/* ====================================================================================
+
+	Select2 style overrides
+
+==================================================================================== */
+:root {
+	--select-ht: 32px;
+	--select-chevron-area-w: 13px;
+	--select-padding-y: 4px;
+	--select-chevron-w: 13px;
+	--select-chevron-h: 13px;
+	--select-border-w: 2px;
+
+	--select-bg-color: var(--off-white);
+	--select-fg-color: var(--black);
+}
+
+// -------------------------
+// Placeholder
+// -------------------------
+.select2-container--default .select2-selection {
+	border-radius: 0;
+	border-width:  var(--select-border-w);
+	border-color:  var(--select-fg-color);
+}
+
+.js-select2 {
+	min-height: var(--select-ht);
+}
+
+.select2-container .select2-selection--single {
+	height: var(--select-ht);
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+	line-height: calc(var(--select-ht) - calc(2 * var(--select-border-w)));
+}
+
+.select2-container--default .select2-selection .select2-selection__rendered {
+	background-color: var(--select-bg-color);
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered,
+.select2-container--default .select2-selection .select2-selection__placeholder {
+	color: var(--select-fg-color);
+}
+
+// -------------------------
+// "Down chevron, down!"
+// -------------------------
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+	right: 4px;
+}
+
+// -------------------------
+// Dropdown <ul>
+// -------------------------
+.js-select2,
+.select2-dropdown {
+	background-color: var(--select-bg-color);
+	color: var(--select-fg-color);
+	border: 2px solid var(--select-fg-color);
+	border-radius: 0;
+}
+
+.select2-results__option,
+.select2-container .select2-selection--single .select2-selection__rendered {
+	padding-left: var(--select-padding-y);
+	font-size: .875rem;
+	font-weight: 500;
+}
+
+.select2-results__option {
+	padding: 8px 0 8px var(--select-padding-y);
+}
+
+.select2-container--open .select2-dropdown--above {
+	border-bottom: 2px solid var(--select-fg-color);
+}
+
+.select2-container--default .select2-results__option[aria-selected=true] {
+    background-color: var(--primary-color);
+	color: var(--white);
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.admin-bar .select2-container--open .select2-dropdown {
+	top: 46px;
+}
+
+@include media(">=782px") {
+	.admin-bar .select2-container--open .select2-dropdown {
+		top: 32px;
+	}
+}
+
+// -------------------------
+// Clear button
+// -------------------------
+.select2-container--default .select2-selection--single .select2-selection__clear {
+	// Move away from down chevron
+	margin-right: 32px;
+}
+
+// -------------------------
+// Search field
+// -------------------------
+.select2-container .select2-selection--single .select2-selection__rendered {
+	padding-right: var(--select-padding-y);
+}
+
+// Chevron wrapper
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+	width: var(--select-chevron-area-w);
+	height: var(--select-ht); // Default: 26px (@selectH - 2)
+}
+
+// Chevron
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+	@include SelectArrow();
+}
+
+// Chevron when menu open
+.select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+	transform: rotate(180deg) translateY(2px);
+}
+
+.select2-container--open .select2-dropdown--below {
+	border-radius: 0;
+}
+
+// Disabled <option>
+.select2-container--default .select2-results__option[aria-disabled=true] {
+	cursor: not-allowed;
+}

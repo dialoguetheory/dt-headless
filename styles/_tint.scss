@@ -1,0 +1,27 @@
+/* ====================================================================================
+
+	BG tint
+
+	(for sections)
+
+==================================================================================== */
+
+.tint {
+	@include Filler();
+	z-index: 0;
+	// opacity: .5;
+	// background-color: #000;
+}
+
+// .tint--darken {
+// 	background-color: #000;
+// }
+
+// .tint--lighten {
+// 	background-color: #fff;
+// }
+
+.tint--download-cards {
+	background: linear-gradient(360deg, rgba(0, 0, 0, 0.86) 17.5%, rgba(0, 0, 0, 0.16) 80.42%);
+	opacity: 1;
+}

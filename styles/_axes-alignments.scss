@@ -1,0 +1,52 @@
+/* ====================================================================================
+
+	Grid/flex axes alignments utility classes
+
+==================================================================================== */
+@each $breakpoint-key, $breakpoint in $breakpoints-map {
+	@if $breakpoint-key != "" { $breakpoint: #{$breakpoint-delimiter}#{$breakpoint}; }
+	@include breakpoint($breakpoint-key) {
+		.justify-content-start#{$breakpoint} {
+			justify-content: flex-start;
+		}
+		.justify-content-center#{$breakpoint} {
+			justify-content: center;
+		}
+		.justify-content-end#{$breakpoint} {
+			justify-content: flex-end;
+		}
+		.justify-space-between#{$breakpoint} {
+			justify-content: space-between;
+		}
+		.justify-space-around#{$breakpoint} {
+			justify-content: space-around;
+		}
+		.justify-self-start#{$breakpoint} {
+			justify-self: flex-start;
+		}
+		.justify-self-end#{$breakpoint} {
+			justify-self: flex-end;
+		}
+		.align-items-start#{$breakpoint} {
+			align-items: flex-start;
+		}
+		.align-items-center#{$breakpoint} {
+			align-items: center;
+		}
+		.align-items-end#{$breakpoint} {
+			align-items: flex-end;
+		}
+		.align-self-start#{$breakpoint} {
+			align-self: flex-start;
+		}
+		.align-self-center#{$breakpoint} {
+			align-self: center;
+		}
+		.align-self-end#{$breakpoint} {
+			align-self: flex-end;
+		}
+		.align-content-between#{$breakpoint} {
+			align-content: space-between;
+		}
+	}
+}

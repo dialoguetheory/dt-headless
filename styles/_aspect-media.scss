@@ -1,0 +1,125 @@
+/* ====================================================================================
+
+	Aspect Media: Proportional thumbnails
+
+	--
+
+	.aspect-* images have intrinsic aspect ratios via padding-bottom trick
+
+	Both .img-aspect and .bg-aspect are proportional by default, but you can set fixed heights on top of this behavior
+
+==================================================================================== */
+
+.aspect-wrap,
+.aspect-spacer,
+.aspect {
+	display: block;
+}
+
+.aspect-wrap {
+	position: relative;
+	overflow: hidden;
+	perspective: 1000px;
+}
+
+.aspect {
+
+	transition: #{"transform var(--trans-dur) var(--trans-func)"};
+
+	// Remove if experiencing suboptimal FPS or memory consumption issues
+	backface-visibility: hidden;
+	transform-style: preserve-3d;
+
+}
+
+.click-area:hover .aspect {
+	cursor: pointer;
+}
+
+.bg-aspect {
+	display: block;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+video.aspect,
+img.img-aspect {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.contain,
+video.aspect.contain,
+img.aspect.contain {
+	object-fit: contain;
+}
+
+
+/*--------------------------------------------------------------
+
+	=Embeds
+
+--------------------------------------------------------------*/
+
+.aspect-wrap iframe {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
+
+/*--------------------------------------------------------------
+
+	=Presets
+
+--------------------------------------------------------------*/
+
+$aspect-default: 56.25%;
+
+@each $breakpoint-key, $breakpoint in $breakpoints-map {
+	@if $breakpoint-key != "" { $breakpoint: #{$breakpoint-delimiter}#{$breakpoint}; }
+	@include breakpoint($breakpoint-key) {
+
+		// Default
+		.aspect-default#{$breakpoint} .aspect-spacer {
+			padding-bottom: $aspect-default !important;
+		}
+
+		// Square
+		.aspect-1-1#{$breakpoint} .aspect-spacer {
+			padding-bottom: 100% !important;
+		}
+
+		// 16:9 (video)
+		.aspect-16-9#{$breakpoint} .aspect-spacer {
+			padding-bottom: 56.25% !important;
+		}
+
+		.aspect-3-2#{$breakpoint} .aspect-spacer {
+			padding-bottom: 66.66% !important;
+		}
+
+		.aspect-4-5#{$breakpoint} .aspect-spacer {
+			padding-bottom: 125% !important;
+		}
+
+	}
+}

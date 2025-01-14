@@ -1,0 +1,18 @@
+// todo by JUN2024/launch: Set + uncomment
+/* ===============================================
+
+	404 Error [Section]
+
+=============================================== */
+/*
+@include media(">=md") {
+
+	body.error404 .main {
+
+		// (Subtract rough desktop header/footer heights to approximate true push footer effect without adding a lot more HTML or JS)
+		min-height: #{"calc(var(--vh100) - 150px - 1680px)"};
+
+	}
+
+}
+*/

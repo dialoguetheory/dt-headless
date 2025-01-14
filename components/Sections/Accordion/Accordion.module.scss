@@ -1,0 +1,112 @@
+/* ====================================================================================
+
+	Accordion
+
+==================================================================================== */
+@import 'styles/breakpoints';
+
+details.details {
+	display: flex;
+    flex-flow:column;
+
+	position: relative;
+
+	&::after {
+		content: '';
+		position: absolute;
+		bottom:   0;
+
+		height: 4px;
+		width:  100%;
+
+		background-color: #2E2E2E;
+	}
+}
+
+details.details:not(:first-child) {
+	margin-top: 20px;
+}
+
+details.details summary.summary {
+	display:         flex;
+	align-items:     center;
+    justify-content: space-between;
+
+	cursor: pointer;
+
+	padding: 0 0 20px 0;
+	margin:  0;
+
+	will-change: transform;
+}
+
+summary.summary::-webkit-details-marker,
+summary.summary::marker {
+	display: none
+}
+
+summary.summary:after {
+	content: "+";
+
+	display:         flex;
+	align-items:     center;
+	justify-content: center;
+	flex:            0 0 28px;
+
+	font-family: var(--font-regular);
+	font-size:   28px;
+	font-weight: 700;
+
+	margin:      0 0 0 24px;
+	padding-top: 2px;
+
+	width:  28px;
+	height: 28px;
+
+	background-color: var(--lilac);
+
+	border-radius: 100%;
+
+}
+
+details.details[open] summary.summary:after {
+	content: "-";
+}
+
+.content > div {
+	display: inline-block;
+
+	padding-bottom: 40px;
+
+	img {
+		border-radius: 16px;
+	}
+	
+}
+
+@media (max-width: $breakpoint-sm) {
+
+	details.details:not(:first-child) {
+		margin-top: 16px;
+	}
+
+	details.details summary.summary {
+		padding: 0 0 var(--vert-marg) 0;
+	}
+
+	summary.summary:after {
+		flex: 0 0 43px;
+
+		font-size: 43px;
+
+		margin: 0 0 0 48px;
+
+		width:  43px;
+		height: 43px;
+	}
+
+	.content > div {
+		padding-bottom: 48px;
+	}
+
+}

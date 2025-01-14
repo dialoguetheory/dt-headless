@@ -1,0 +1,117 @@
+/* ====================================================================================
+
+	=Animation
+
+==================================================================================== */
+
+:root {
+
+	// -------------------
+	// =Transitions
+	// -------------------
+	--trans-dur-fast: .1s;
+	--trans-dur:      .15s;
+	--trans-dur-slow: .3s;
+	--trans-dur-tray: .8s;
+	--trans-func:     ease-out;
+
+	// Basic show-hide functionality
+	--trans-inactive: #{"visibility 0s var(--trans-func) var(--trans-dur), opacity var(--trans-dur)"};
+	--trans-active:   #{"visibility 0s var(--trans-func) 0s, opacity var(--trans-dur)"};
+
+}
+
+
+/*-----------------------------------------------------------------------------------*/
+/* =Pulse
+/*-----------------------------------------------------------------------------------*/
+
+@mixin Pulse(){
+	-webkit-animation: 1.5s ease pulse infinite;
+	   -moz-animation: 1.5s ease pulse infinite;
+	     -o-animation: 1.5s ease pulse infinite;
+	    -ms-animation: 1.5s ease pulse infinite;
+	        animation: 1.5s ease pulse infinite;
+}
+
+@mixin PulseFromOpaque(){
+	-webkit-animation: 1.5s ease revpulse infinite;
+	   -moz-animation: 1.5s ease revpulse infinite;
+	     -o-animation: 1.5s ease revpulse infinite;
+	    -ms-animation: 1.5s ease revpulse infinite;
+	        animation: 1.5s ease revpulse infinite;
+}
+
+@keyframes pulse {
+	0%, 100% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
+@-webkit-keyframes pulse {
+	0%, 100% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
+@-moz-keyframes pulse {
+	0%, 100% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
+@-o-keyframes pulse {
+	0%, 100% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
+@-ms-keyframes pulse {
+	0%, 100% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
+@keyframes revpulse {
+	0%, 100% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
+@-webkit-keyframes revpulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0;	}
+}
+
+@-moz-keyframes revpulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0;	}
+}
+
+@-o-keyframes revpulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0;	}
+}
+
+@-ms-keyframes revpulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0;	}
+}

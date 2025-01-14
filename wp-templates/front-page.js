@@ -1,88 +1,87 @@
-import { gql } from "@apollo/client";
-import Head from "next/head";
-import Link from "next/link";
-import Header from "../components/header";
-import EntryHeader from "../components/entry-header";
-import Footer from "../components/footer";
-import style from "../styles/front-page.module.css";
+import { useQuery, gql } from '@apollo/client';
+import * as MENUS from '../constants/menus';
+import { SiteInfoFragment } from '../fragments/GeneralSettings';
+import className from 'classnames/bind';
+import styles from "../styles/modules/Front-page.module.scss";
+
+import {
+  Header,
+  Footer,
+  Main,
+  Container,
+  ContentWrapper,
+  EntryHeader,
+  NavigationMenu,
+  FeaturedImage,
+  SEO,
+} from '../components';
+
+let cx = className.bind(styles);
 
 export default function Component(props) {
+
+  if (props.loading) {
+    return <>Loading...</>;
+  }
+
   const { title: siteTitle, description: siteDescription } =
     props.data.generalSettings;
-  const menuItems = props.data.primaryMenuItems.nodes;
+  const primaryMenu = props?.data?.headerMenuItems?.nodes ?? [];
+  const footerMenu = props?.data?.footerMenuItems?.nodes ?? [];
+  const { title, content, featuredImage } = props?.data?.page ?? { title: '' };
 
   return (
     <>
-      <Head>
-        <title>{siteTitle}</title>
-      </Head>
-
-      <Header
-        siteTitle={siteTitle}
-        siteDescription={siteDescription}
-        menuItems={menuItems}
+      <SEO
+        title={siteTitle}
+        description={siteDescription}
+        imageUrl="https://example.com/image.jpg"
+        url="https://example.com"
       />
-
-      <main className="container">
-        <EntryHeader title="Welcome to the Faust Scaffold Blueprint" />
-
-        <section className={style.cardGrid}>
-          <Link
-            href="https://faustjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={style.card}
-          >
-            <h3>Documentation →</h3>
-            <p>
-              Learn more about Faust.js through guides and reference
-              documentation.
-            </p>
-          </Link>
-
-          <Link
-            href="https://my.wpengine.com/atlas#/create/blueprint"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={style.card}
-          >
-            <h3>Blueprints →</h3>
-            <p>Explore production ready Faust.js starter projects.</p>
-          </Link>
-
-          <Link
-            href="https://wpengine.com/atlas"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={style.card}
-          >
-            <h3>Deploy →</h3>
-            <p>
-              Deploy your Faust.js app to Headless Platform along with your WordPress
-              instance.
-            </p>
-          </Link>
-
-          <Link
-            href="https://github.com/wpengine/faustjs"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={style.card}
-          >
-            <h3>Contribute →</h3>
-            <p>Visit us on GitHub to explore how you can contribute!</p>
-          </Link>
-        </section>
-      </main>
-
-      <Footer />
+      <Header
+        title={siteTitle}
+        description={siteDescription}
+        menuItems={primaryMenu}
+      />
+      <Main className={cx(`main`)}>
+        <>
+          <EntryHeader title={`title`} image={featuredImage?.node} />
+          <Container>
+            <ContentWrapper content={content} />
+          </Container>
+        </>
+      </Main>
+      <Footer title={siteTitle} menuItems={footerMenu} />
     </>
   );
 }
 
+Component.variables = () => {
+  return {
+    headerLocation: MENUS.PRIMARY_LOCATION,
+    footerLocation: MENUS.FOOTER_LOCATION
+  };
+};
+
 Component.query = gql`
-  ${Header.fragments.entry}
-  query GetHomePage {
-    ...HeaderFragment
+  ${SiteInfoFragment}
+  ${NavigationMenu.fragments.entry}
+  query GetPageData(
+    $headerLocation: MenuLocationEnum
+    $footerLocation: MenuLocationEnum
+  ) {
+    generalSettings {
+      ...SiteInfoFragment
+    }
+    footerMenuItems: menuItems(where: { location: $footerLocation }) {
+      nodes {
+        ...NavigationMenuItemFragment
+      }
+    }
+    headerMenuItems: menuItems(where: { location: $headerLocation }) {
+      nodes {
+        ...NavigationMenuItemFragment
+      }
+    }
   }
 `;

@@ -1,0 +1,44 @@
+/* ====================================================================================
+
+	Breakpoints
+
+	@related breakpoints
+
+==================================================================================== */
+
+// -------------------
+// SCSS $vars
+// -------------------
+
+$breakpoint-delimiter: \@;
+
+// ---------------------------
+// ¡¡¡ CHANGING THESE? !!!
+//
+// Also take these steps:
+// 1. Match vals with other theme instances: @breakpoint_list
+// 2. Search codebase for THESE VALUES MINUS 1 (e.g. 640 becomes 639) for img sizes attribute breakpoints, which we set in reverse
+// ---------------------------
+$breakpoint-sm:  640px !default; // >=sm: Tablet
+$breakpoint-md: 1024px !default; // >=md: Laptop
+$breakpoint-lg: 1512px !default; // >=lg: Desktop
+$breakpoint-xl: 1920px !default; // >=xl: Designers
+
+// See also: $container-max-w (used as breakpoint in certain places)
+
+$breakpoints: (
+	"xs": 0, // No breakpoint (Designed at 320)
+	"sm": $breakpoint-sm,
+	"md": $breakpoint-md,
+	"lg": $breakpoint-lg,
+	"xl": $breakpoint-xl,
+);
+
+// Helps create both responsive and non-responsive classes in one loop.
+$breakpoints-map: (
+	"": "",
+	sm: "sm",
+	md: "md",
+	lg: "lg",
+	xl: "xl",
+) !default;

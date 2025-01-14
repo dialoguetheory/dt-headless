@@ -1,0 +1,108 @@
+/* ====================================================================================
+
+	=Vertical margins
+	(of text elements)
+
+	See also: --section-pad-y CSS var
+
+	re: fonts and vertical metrics optimizations: https://stackoverflow.com/a/33678662/12910772
+
+==================================================================================== */
+
+.quote-attr,
+.wp-caption,
+code,
+pre,
+p, .p, // No need to have .rt p since screen readers don't treat paragraphs as special–therefore we can swap <p> for <div> anywhere we don't want vert margins
+.rt figure, .figure,
+.rt ul, .ul,
+.rt ol, .ol,
+.rt h1, .h1,
+.rt h2, .h2,
+.rt h3, .h3,
+.rt h4, .h4,
+.rt h5, .h5,
+.rt h6, .h6 {
+	margin-top: 0;
+	margin-bottom: var(--vert-marg);
+}
+
+// (Since <div> and <p> can't go inside h1/h2: https://stackoverflow.com/a/19779520/12910772)
+.h1, .h2, .h3, .h4, .h5, .h6
+.p {
+	display: block;
+}
+
+
+// ---------------------------------------
+// Remove final bottom margin
+// ---------------------------------------
+.quote-attr:last-child:not(.visually-first),
+.rt figure:last-child:not(.visually-first),
+   .figure:last-child:not(.visually-first),
+.p:last-child:not(.visually-first),
+ p:last-child:not(.visually-first),
+.rt figure:last-child:not(.visually-first),
+   .figure:last-child:not(.visually-first),
+.rt ul:last-child:not(.visually-first),
+   .ul:last-child:not(.visually-first),
+.rt ol:last-child:not(.visually-first),
+   .ol:last-child:not(.visually-first),
+.rt blockquote:last-child:not(.visually-first),
+   .blockquote:last-child:not(.visually-first),
+.rt h1:last-child:not(.visually-first),
+   .h1:last-child:not(.visually-first),
+.rt h2:last-child:not(.visually-first),
+   .h2:last-child:not(.visually-first),
+.rt h3:last-child:not(.visually-first),
+   .h3:last-child:not(.visually-first),
+.rt h4:last-child:not(.visually-first),
+   .h4:last-child:not(.visually-first),
+.rt h5:last-child:not(.visually-first),
+   .h5:last-child:not(.visually-first),
+.rt h6:last-child:not(.visually-first),
+   .h6:last-child:not(.visually-first) {
+	margin-bottom: 0;
+}
+
+
+// ----------------------------------------------
+// More explicit vert marg utilities (vs generic .p)
+// ----------------------------------------------
+
+@each $breakpoint-key, $breakpoint in $breakpoints-map {
+	@if $breakpoint-key != "" { $breakpoint: #{$breakpoint-delimiter}#{$breakpoint}; }
+	@include breakpoint($breakpoint-key) {
+
+		// Helps when visual order departs from DOM order for a11y. For alt approach, see: https://designsystem.digital.gov/components/card/
+		.vert-marg-top#{$breakpoint} {
+			margin-top: var(--vert-marg);
+		}
+
+		.vert-marg-bottom#{$breakpoint} {
+			margin-bottom: var(--vert-marg);
+		}
+
+		// Compensate for rows of items with margin bottom
+		.vert-marg-bottom-compensate#{$breakpoint} {
+			margin-bottom: #{"calc(var(--vert-marg) * -1)"};
+		}
+
+		// Compensate for rows of items with margin bottom
+		.vert-marg-bottom-compensate-none#{$breakpoint} {
+			margin-bottom: 0;
+		}
+
+		.vert-marg-none#{$breakpoint},
+		.vert-marg-top-none#{$breakpoint} {
+			margin-top: 0;
+		}
+
+		.vert-marg-none#{$breakpoint},
+		.vert-marg-bottom-none#{$breakpoint} {
+			margin-bottom: 0;
+		}
+
+	}
+
+}

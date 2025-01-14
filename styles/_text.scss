@@ -1,0 +1,231 @@
+/* ====================================================================================
+
+	_text.scss
+
+	Apply character style mixins & variables (from _text-vars.scss) to classes and other selectors.
+
+	@related: fonts_text_charstyles_type_headings_titles
+
+==================================================================================== */
+
+/* ====================================================================================
+
+	=Body text
+
+==================================================================================== */
+
+body {
+	color: var(--fg-color);
+
+	@include ThinType();
+	@include BodyText();
+}
+
+.body-big {
+	color: var(--fg-color);
+
+	@include BodyTextBig();
+}
+
+.body-big-thin {
+	color: var(--fg-color);
+
+	@include BodyTextBigThin();
+}
+
+.body-mini {
+	color: var(--fg-color);
+
+	@include BodyTextMini();
+}
+
+.body-mini-thin {
+	color: var(--fg-color);
+
+	@include BodyTextMiniThin();
+}
+
+a.body-mini,
+.body-mini a {
+	color: var(--link-color);
+}
+
+.rt p,
+.rt .p,
+.p {
+	color: var(--fg-color);
+
+	@include BodyText();
+}
+
+/* ====================================================================================
+
+	=Headings
+
+	IMPORTANT: We're making headings visually indistinct by default, to keep presentation and semantics/accessibility separate.
+
+	Headings should start like divs, vert margin-wise, unless they're within .rt, e.g. .rt h3 { whatever: man; }
+
+	@related: _colors-dark-light.scss for colors
+
+==================================================================================== */
+
+// ---------------
+// Reset
+// ---------------
+h1, h2, h3, h4, h5, h6 {
+	margin-top: 0;
+	margin-bottom: 0;
+	font-size: 1em;
+	font-weight: normal;
+}
+
+@include media("<sm") {
+	h1, h2, h3, h4, h5, h6 {
+		@include Hyphenate();
+	}
+}
+
+// ---------------
+// Classes
+// ---------------
+.rt h1,
+.rt .h1,
+.h1 {
+	@include H1();
+}
+
+.h1--jumbo {
+	@include H1--Jumbo();
+}
+
+.rt h2,
+.rt .h2,
+.h2 {
+	@include H2();
+}
+
+.rt h3,
+.rt .h3,
+.h3 {
+	@include H3();
+}
+
+.rt h4,
+.rt .h4,
+.h4 {
+	@include H4();
+}
+
+.rt h5,
+.rt .h5,
+.h5 {
+	@include H5();
+}
+
+.title-jumbo {
+	@include TitleJumbo();
+}
+
+/* ====================================================================================
+
+	Font =Weights
+
+==================================================================================== */
+.ft-wgt-600 {
+	font-weight: 600;
+}
+
+.ft-wgt-700,
+b,
+strong {
+	font-weight: 700;
+}
+
+/* ====================================================================================
+
+	Links
+
+==================================================================================== */
+button,
+a {
+	color: var(--link-color);
+
+	transition-property:        color;
+	transition-duration:        var(--trans-dur);
+	transition-timing-function: var(--trans-func);
+}
+
+a {
+	text-decoration: underline;
+	font-weight: inherit;
+}
+
+.rt a {
+	font-weight: 700;
+}
+
+a:focus,
+a:hover {
+	text-decoration: none;
+}
+
+button {
+	background-color: transparent;
+	border-color: inherit;
+	border-image: none;
+	border-style: solid;
+	border-radius: 0;
+}
+
+input[type="button"]:not(:disabled),
+input[type="submit"]:not(:disabled),
+button:not(:disabled) {
+	cursor: pointer;
+}
+
+.no-underline a,
+a.no-underline {
+	text-decoration: none !important;
+}
+
+.underline-hover a,
+a.underline-hover
+
+/* ====================================================================================
+
+	Font =Styles
+
+==================================================================================== */
+em {
+	font-style: italic;
+	font-family: var(--font-family-italic);
+}
+
+/* ====================================================================================
+
+	=Colors
+
+==================================================================================== */
+.blue-dark {
+	color: var(--primary-color)
+}
+
+.black {
+	color: var(--black)
+}
+
+/* ====================================================================================
+
+	=Column Count
+
+==================================================================================== */
+
+@include media(">=sm") {
+
+	.col-count--2 {
+		column-count: 2;
+		column-gap: 3rem;
+	}
+
+}

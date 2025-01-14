@@ -1,0 +1,44 @@
+/* ====================================================================================
+
+	Breadcrumb nav
+
+==================================================================================== */
+
+.breadcrumbs li {
+	--gutter-list-item: 3px;
+	display: inline;
+}
+
+.breadcrumbs li.breadcrumb_last {
+	display: none;
+}
+
+.breadcrumb-sep {
+	position: relative;
+	width: 8px;
+	height: 12px;
+	top: 1px;
+	margin: 0 10px;
+	&:last-of-type {
+		margin: 0 0 0 10px;
+	}
+}
+
+.breadcrumbs>ul,
+.breadcrumbs>ol {
+	padding-left: 0;
+	list-style: none;
+}
+
+// ----------------------------------
+// =Dark Area
+// ----------------------------------
+
+.dark-area .breadcrumbs {
+	color: var(--white);
+}
+
+.dark-area .breadcrumbs a {
+	color: var(--white);
+}
+

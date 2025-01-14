@@ -1,0 +1,30 @@
+/* ====================================================================================
+
+	.visible@* / .hidden@*
+
+==================================================================================== */
+
+.hidden { display: none !important; }
+
+@include media(">=sm") {
+	.hidden#{$breakpoint-delimiter}sm { display: none !important; }
+}
+@include media(">=md") {
+	.hidden#{$breakpoint-delimiter}md { display: none !important; }
+}
+@include media(">=lg") {
+	.hidden#{$breakpoint-delimiter}lg { display: none !important; }
+}
+
+
+// .visible {} // leave here for IDE typeahead purposes
+
+@include media("<sm") {
+	.visible#{$breakpoint-delimiter}sm { display: none !important; }
+}
+@include media("<md") {
+	.visible#{$breakpoint-delimiter}md { display: none !important; }
+}
+@include media("<lg") {
+	.visible#{$breakpoint-delimiter}lg { display: none !important; }
+}

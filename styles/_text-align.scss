@@ -1,0 +1,19 @@
+/* ====================================================================================
+
+	text-align
+
+	@related: fonts_text_charstyles_type_headings_titles
+
+==================================================================================== */
+
+@each $breakpoint-key, $breakpoint in $breakpoints-map {
+	@if $breakpoint-key != "" { $breakpoint: #{$breakpoint-delimiter}#{$breakpoint}; }
+	@include breakpoint($breakpoint-key) {
+
+		.text-align-left#{$breakpoint}   { text-align: left; }
+		.text-align-center#{$breakpoint} { text-align: center; }
+		.text-align-right#{$breakpoint}  { text-align: right; }
+		// .text-align-unset#{$breakpoint}  { text-align: inherit; }
+
+	}
+}

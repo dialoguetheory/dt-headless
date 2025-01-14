@@ -1,0 +1,139 @@
+/* ====================================================================================
+
+	Cards
+
+==================================================================================== */
+
+.card {
+	position: relative;
+}
+
+.card__media--post .aspect-spacer {
+	padding-bottom: 42% !important;
+}
+
+// --------------------
+// Cards without hover effect
+// --------------------
+.card--no-results:after {
+	display: none !important;
+}
+
+.card__media {
+	overflow: hidden;
+}
+
+.card__link {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	padding: 15px 21px;
+}
+
+.card__link a {
+	display: inline-flex;
+	width: 37px;
+	height: 37px;
+}
+
+.card__link a svg {
+	width: 100%;
+}
+
+// --------------------
+// Top-align headshots
+// --------------------
+.card--person img {
+	object-position: center top;
+}
+
+// --------------------
+// Facts List Card
+// --------------------
+.cards--facts-list {
+	gap: 8px;
+}
+.card--facts-list {
+	padding: 8px;
+}
+.card__header--facts-list {
+	margin-bottom: 32px;
+}
+@include media(">=md") {
+	.card__header--facts-list {
+		max-width: 250px;
+		margin-bottom: 46px;
+	}
+	.card__desc--facts-list {
+		max-width: 720px;
+		margin-left: auto;
+	}
+}
+
+// --------------------
+// Key Number Card
+// --------------------
+.cards--key-number {
+	--column-gap: 8px;
+	row-gap: 8px;
+}
+
+.card--key-number {
+	padding: 8px;
+}
+
+.card__header--key-number {
+	margin-bottom: 32px;
+}
+
+@include media(">=md") {
+	.card__header--key-number {
+		margin-bottom: 50px;
+	}
+	.card__desc--key-number{
+		max-width: 244px;
+		margin-left: auto;
+	}
+}
+
+// --------------------
+// Loop Card
+// --------------------
+.card__date {
+	margin-bottom: .75rem;
+
+	display: flex;
+	gap:     1rem;
+}
+
+.card--loop {
+	padding-left: 16px;
+}
+
+.card__header--loop {
+	position: relative;
+	&::before {
+		content: '';
+		top: 0;
+		left: -16px;
+		position: absolute;
+		height: 100%;
+		width: 2px;
+		background-color: var(--black);
+	}
+}
+
+@include media(">=md") {
+
+	.card--loop {
+		padding: 0;
+	}
+
+	.card__header--loop {
+		&::before {
+			left: -26px;
+		}
+	}
+
+}
+

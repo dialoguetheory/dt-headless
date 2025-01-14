@@ -1,0 +1,38 @@
+/* ====================================================================================
+
+	Mega menu: critical (on initial render)
+
+==================================================================================== */
+:root {
+	--nav-default-ht: #{$nav-default-ht};
+}
+
+.mega {
+	position: relative;
+	z-index:  calc(var(--header-z) - 10);
+	overflow: hidden;
+
+	box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+header:not(.has-open-mega) .mega {
+	max-height: var(--nav-default-ht);
+}
+
+header:not(.has-open-mega) .nav--main .mega__column {
+	visibility: hidden;
+	opacity: 0;
+
+	transition-property:        opacity;
+	transition-duration:        var(--trans-dur);
+	transition-timing-function: var(--trans-func);
+}
+
+.nav--main .mega__column {
+	visibility: visible;
+	opacity: 1;
+
+	transition-property:        opacity;
+	transition-duration:        var(--trans-dur);
+	transition-timing-function: var(--trans-func);
+}

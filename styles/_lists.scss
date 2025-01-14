@@ -1,0 +1,83 @@
+/* ====================================================================================
+
+	Ordered & Unordered lists
+
+==================================================================================== */
+
+// ----------------------------------------------
+// Custom resets
+// Similar to heading 1-6 theory. <ul> shouldn't dictate visuals by default.
+// ----------------------------------------------
+
+ol, ul {
+	padding: 0;
+	margin: 0;
+}
+
+ul {
+	list-style: none;
+}
+ol {
+	list-style: decimal;
+}
+
+.rt li::marker {
+	color: var(--accent-color-bold);
+}
+
+// ----------------------------------------------
+// List styles
+// ----------------------------------------------
+
+.ul,
+.rt ul {
+	list-style-type: disc;
+}
+
+.ol,
+.rt ol {
+	list-style-type: decimal;
+}
+
+
+// For vert margins, see _vert-marg.scss
+.ol, .ul,
+.rt ol, .rt ul {
+	position: relative;
+	padding-left: var(--gutter-list, 32px);
+}
+
+.ol li, .ul li,
+.rt li {
+	padding-left: var(--gutter-list-item, 12px);
+}
+
+.ol li+li, .ul li+li,
+.rt li+li {
+	margin-top: var(--vert-marg-li);
+}
+
+
+// ----------------------------------------------
+// List markers
+// ----------------------------------------------
+
+.rt li::marker {
+	color: var(--accent-color-bold);
+}
+
+.dark-area.rt li::marker
+.dark-area .rt li::marker {
+	color: var(--white);
+}
+
+.light-area.rt li::marker,
+.light-area .rt li::marker {
+	color: var(--accent-color-bold);
+}
+
+// Ensure bullets don't overlap with float-left image
+// .rt .alignleft {
+// 	margin-right: calc(var(--gutter) * 3);
+// }
+

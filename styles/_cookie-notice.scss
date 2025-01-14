@@ -1,0 +1,45 @@
+/* ====================================================================================
+
+	Cookie notice
+
+==================================================================================== */
+
+#cookie-notice {
+	background-color: var(--primary-color);
+	color: var(--white);
+	font-family: var(--font-family-main);
+	font-size: 16px;
+}
+
+#cookie-notice a {
+	color: var(--secondary-color);
+}
+
+.cn-close-icon {
+	opacity: 1;
+}
+
+#cookie-notice .cn-close-icon:after,
+#cookie-notice .cn-close-icon:before {
+	background-color: var(--white);
+}
+
+#cookie-notice #cn-accept-cookie.cn-button {
+	// @include CTA();
+	padding: 6px 24px 7px;
+
+	color: var(--primary-color);
+	font-weight: 700;
+	font-family: var(--font-family-main);
+
+	border-radius: 0;
+
+	transition: all var(--trans-dur) var(--trans-func);
+
+	&:active,
+	&:hover {
+		border-color: transparent;
+		color: var(--primary-color);
+		background-color: var(--white) !important;
+	}
+}

@@ -1,0 +1,88 @@
+/* ====================================================================================
+
+	Flex
+
+	Usage: .flex, .flex-row, .flex-col
+
+==================================================================================== */
+.flex {
+	display: flex;
+}
+
+.iflex {
+	display: inline-flex;
+}
+
+@each $breakpoint-key, $breakpoint in $breakpoints-map {
+	@if $breakpoint-key != "" { $breakpoint: #{$breakpoint-delimiter}#{$breakpoint}; }
+	@include breakpoint($breakpoint-key) {
+
+		.flex-dir-col#{$breakpoint} {
+			display: flex;
+			box-sizing: border-box;
+			flex: 0 1 auto;
+			flex-direction: column;
+		}
+
+		.flex-col-full-ht#{$breakpoint} {
+			display: flex;
+			align-items: stretch;
+		}
+
+		.flex-row#{$breakpoint} {
+			display: flex;
+			box-sizing: border-box;
+			flex: 0 1 auto;
+			flex-direction: row;
+		}
+
+		.flex-row-wrap#{$breakpoint} {
+			display: flex;
+			box-sizing: border-box;
+			flex: 0 1 auto;
+			flex-direction: row;
+			flex-wrap: wrap;
+		}
+
+		.flex-grow#{$breakpoint} {
+			flex: 1;
+		}
+
+	}
+}
+
+/*-----------------------------------------------------------------------------------*/
+/*	Gutters
+/*-----------------------------------------------------------------------------------*/
+// (These go on the element containing .flex-cols)
+.gutters {
+	margin-left:  #{"calc(var(--column-gap) * -1)"};
+	margin-right: #{"calc(var(--column-gap) * -1)"};
+}
+.gutters > [class*="flex-col-"] {
+	padding-left:  #{"var(--column-gap) !important"};
+	padding-right: #{"var(--column-gap) !important"};
+}
+
+
+/*-----------------------------------------------------------------------------------*/
+/*	Columns
+/*-----------------------------------------------------------------------------------*/
+@each $breakpoint-key, $breakpoint in $breakpoints-map {
+	@if $breakpoint-key != "" { $breakpoint: #{$breakpoint-delimiter}#{$breakpoint}; }
+	@include breakpoint($breakpoint-key) {
+		.flex-col-1#{$breakpoint} { width: (math.div(1, 12) * 100%); }
+		.flex-col-2#{$breakpoint} { width: (math.div(2, 12) * 100%); }
+		.flex-col-3#{$breakpoint} { width: (math.div(3, 12) * 100%); }
+		.flex-col-4#{$breakpoint} { width: (math.div(4, 12) * 100%); }
+		.flex-col-5#{$breakpoint} { width: (math.div(5, 12) * 100%); }
+		.flex-col-6#{$breakpoint} { width: (math.div(6, 12) * 100%); }
+		.flex-col-7#{$breakpoint} { width: (math.div(7, 12) * 100%); }
+		.flex-col-8#{$breakpoint} { width: (math.div(8, 12) * 100%); }
+		.flex-col-9#{$breakpoint} { width: (math.div(9, 12) * 100%); }
+		.flex-col-10#{$breakpoint} { width: (math.div(10, 12) * 100%); }
+		.flex-col-11#{$breakpoint} { width: (math.div(11, 12) * 100%); }
+		.flex-col-12#{$breakpoint} { width: 100%; }
+	}
+}
+

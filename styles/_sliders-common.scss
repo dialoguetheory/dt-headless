@@ -1,0 +1,19 @@
+/* ====================================================================================
+
+	Sliders [Section]
+
+	Basic flickity overrides.
+
+==================================================================================== */
+
+.flickity-cell[aria-hidden="true"] .play-btn {
+	visibility: hidden;
+}
+
+.flickity-cell .play-btn {
+	visibility: hidden;
+}
+
+.slider-button[disabled] {
+	opacity: 0.5;
+}

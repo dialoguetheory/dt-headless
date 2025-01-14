@@ -1,0 +1,238 @@
+/* ====================================================================================
+
+	Site Footer
+
+==================================================================================== */
+
+.footer__wrap {
+	padding-bottom: 60px;
+	padding-top: 124px;
+
+	position: relative; // helps prevent browser bugs that tend to come posfixed parallax BG with z-index: 0
+}
+
+.footer {
+	--logo-w: 100%;
+}
+
+.site-logo--footer {
+	margin: 0 0 1.5rem 0;
+	max-width: 500px;
+}
+
+.footer__content {
+	padding: 2.5rem 0;
+	margin:  0 0 1.5rem 0;
+	position: relative;
+	&::before {
+		content: '';
+		position: absolute;
+		top:      0;
+
+		height: var(--border-w);
+		width:  100%;
+
+		background: var(--primary-color);
+	}
+	&::after {
+		content: '';
+		position: absolute;
+		bottom:   0;
+
+		height: var(--border-w);
+		width:  100%;
+
+		background: var(--primary-color);
+	}
+
+}
+
+.footer__text {
+	font-size:   24px;
+	font-style:  normal;
+	font-weight: 600;
+	line-height: 120%;
+}
+
+.footer__text + .footer__featured-link {
+	margin: 1.5rem 0 0 0;
+}
+
+.menu--footer-main {
+	gap: 2rem;
+
+	margin: 3.5rem 0 0 0;
+
+	a {
+		font-size:      0.875rem;
+		font-weight:    700;
+		line-height:    normal;
+		text-transform: uppercase;
+	}
+
+}
+
+.footer__ctas {
+	margin: 3.5rem 0 0 0;
+}
+
+.footer__btm-row {
+	row-gap: 1.125rem;
+}
+
+.menu--footer-util {
+	gap: 1.5rem;
+
+	a {
+		font-size: 0.625rem;
+		font-weight: 700;
+		line-height: 150%;
+	}
+
+}
+
+@include media(">=sm") {
+	.has-ctas--footer {
+		--cta-min-width: 100%;
+	}
+
+}
+
+@include media(">=md") {
+
+	.footer__wrap {
+		padding-top: 200px;
+	}
+
+	.footer:not(.footer--projects) {
+		--logo-w: 155px;
+		padding-top: #{fluid(0, 124px, 1280px, $breakpoint-lg)};
+		grid-template-rows: 1fr min-content;
+	}
+
+	.site-logo--footer {
+        margin: 0;
+        position: relative;
+        overflow: visible;
+        width: 100%;
+        height: 100%;
+		a {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			height: calc(100% + clamp(0rem, 53.45vw + -42.76rem, 7.75rem));
+			max-height: 611px;
+		}
+		svg {
+			width: auto;
+			height: 100%;
+		}
+	}
+
+	.footer__content {
+		padding: 3rem 0;
+		margin:  auto 0 3.75rem 0;
+		min-height: #{fluid(300px, 400px, $breakpoint-lg)};
+	}
+
+	.footer__text + .footer__featured-link,
+	.footer__featured-link {
+		margin: auto 0 0 0;
+	}
+
+	.has-ctas--footer {
+		--cta-min-width: 344px;
+		row-gap: 1.5rem; // @TODO is this the site standard?
+
+		margin-top: 14px;
+	}
+
+	.footer__text {
+		font-size:   #{fluid(24px, 40px)};
+		line-height: 95%;
+
+		margin: 0;
+
+		max-width: 18ch;
+	}
+
+	.menu--footer-main {
+		gap: #{fluid(12px, 40px)};
+		margin: 0;
+	}
+
+	.footer__ctas {
+		margin: 0;
+	}
+
+	.menu--footer-util {
+		gap: 2rem;
+
+		a {
+			font-size: 0.75rem;
+		}
+
+	}
+
+
+}
+
+/*-----------------------------------------------------------------------------------*/
+/*	=Projects Footer
+/*-----------------------------------------------------------------------------------*/
+.footer__slogan p {
+	@include TitleJumbo();
+}
+
+.footer__top-row--projects {
+	row-gap: 1.5rem;
+	padding-top: 1.5rem;
+	border-top: 2px solid;
+}
+
+.footer--projects {
+	row-gap: 1.5rem;
+}
+
+.footer__wrap--projects {
+	padding-top:    var(--section-pad-top);
+	padding-bottom: 1.5rem;
+}
+
+.footer__social .icon-links--connect {
+	display: flex;
+	flex-flow: row wrap;
+}
+
+@include media(">=md") {
+
+	.footer--projects {
+		row-gap: #{fluid(32px, 62px)};
+	}
+
+	.footer__wrap--projects {
+		padding-top: var(--section-pad-top);
+		padding-bottom: 1.5rem;
+	}
+
+	.footer__slogan {
+		max-width: 60ch;
+	}
+
+	.footer__about {
+		max-width: 25ch;
+	}
+
+	.footer__top-row--projects {
+		padding-top: 2.5rem;
+	}
+
+	.footer__btm-row--projects {
+		row-gap: #{fluid(24px, 32px)};
+	}
+
+	.footer__social .icon-links--connect {
+		justify-content: flex-end;
+	}
+
+}
