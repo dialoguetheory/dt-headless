@@ -5,65 +5,65 @@
 	For .hero basics, see _section.scss
 
 ==================================================================================== */
-.hero {
-	--section-pad-top: 5rem;
-	--section-pad-btm: 5rem;
-}
+// .hero {
+// 	--section-pad-top: 5rem;
+// 	--section-pad-btm: 5rem;
+// }
 
-.hero__cta {
-	position: relative;
+// .hero__cta {
+// 	position: relative;
 
-	&::before {
-		content: '';
+// 	&::before {
+// 		content: '';
 
-		position: absolute;
-		bottom:   0px;
-		left:     0px;
+// 		position: absolute;
+// 		bottom:   0px;
+// 		left:     0px;
 
-		width:  100%;
-		height: var(--border-w);
+// 		width:  100%;
+// 		height: var(--border-w);
 
-		background-color: var(--fg-color);
-	}
-}
+// 		background-color: var(--fg-color);
+// 	}
+// }
 
-@include media("<md") {
-	.hero__cta {
-		--cta-min-width: 100%;
-	}
-}
+// @include media("<md") {
+// 	.hero__cta {
+// 		--cta-min-width: 100%;
+// 	}
+// }
 
-@include media(">=md") {
+// @include media(">=md") {
 
-	.hero {
-		--section-pad-top: #{"calc(5.625rem + var(--header-ht-plus))"};
-		--section-pad-btm: 5.625rem;
-	}
+// 	.hero {
+// 		--section-pad-top: #{"calc(5.625rem + var(--header-ht-plus))"};
+// 		--section-pad-btm: 5.625rem;
+// 	}
 
-	.hero:last-child {
-		--section-pad-btm: 0;
-	}
-	.hero__desc {
-		--vert-marg: 1.5rem;
+// 	.hero:last-child {
+// 		--section-pad-btm: 0;
+// 	}
+// 	.hero__desc {
+// 		--vert-marg: 1.5rem;
 
-		max-width: 58.33%;
-	}
+// 		max-width: 58.33%;
+// 	}
 
-	.hero__title {
-		--vert-marg: 1.5rem;
+// 	.hero__title {
+// 		--vert-marg: 1.5rem;
 
-		max-width: 58.33%;
-	}
+// 		max-width: 58.33%;
+// 	}
 
-	.hero__cta {
-		margin-left:    auto;
-		padding-bottom: unset;
-		&::before {
-			width: calc( 100vw - 100% - 24px - calc(2 * var(--page-gutter)));
+// 	.hero__cta {
+// 		margin-left:    auto;
+// 		padding-bottom: unset;
+// 		&::before {
+// 			width: calc( 100vw - 100% - 24px - calc(2 * var(--page-gutter)));
 
-			left:  unset;
-			right: calc(100% + 24px);
-		}
-	}
+// 			left:  unset;
+// 			right: calc(100% + 24px);
+// 		}
+// 	}
 
-}
+// }

@@ -9,6 +9,8 @@ export { Heading } from './Heading';
 export { Main } from './Main';
 export { NavigationMenu } from './NavigationMenu';
 export { MegaMenu } from './MegaMenu';
+export { MobileMenu } from './MobileMenu';
+export { MegaMenuSubMenu } from './MegaMenuSubMenu';
 export { PostInfo } from './PostInfo';
 export { SkipNavigationLink } from './SkipNavigationLink';
 export { Hero } from './Hero';

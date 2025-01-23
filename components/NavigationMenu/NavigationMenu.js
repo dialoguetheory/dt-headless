@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
-import { gql } from '@apollo/client';
 import Link from 'next/link';
 import styles from './NavigationMenu.module.scss';
 import stylesFromWP from './NavigationMenuClassesFromWP.module.scss';
 import { flatListToHierarchical } from '@faustwp/core';
+import { isValidUrl } from '../../utils/isValidUrl';
+import { NavigationMenuItemFragment } from '../../fragments/NavigationItems';
 
 let cx = classNames.bind(styles);
 let cxFromWp = classNames.bind(stylesFromWP);
@@ -31,12 +32,17 @@ export default function NavigationMenu({ menuItems, className }) {
       <ul
         className={cx('menu', depth > 0 ? 'sub-menu' : '', 'flex')}
         data-depth={depth}>
-        {items.map((item) => {
-          const { id, path, label, children, cssClasses } = item;
+        {items.map((menuItem) => {
+          const {
+            id, url, path, title, label, cssClasses, target, linkRelationship, children
+          } = menuItem;
 
-          if (!item.hasOwnProperty('__typename')) {
+          if (!menuItem.hasOwnProperty('__typename')) {
             return null;
           }
+
+          // Check if the URL is valid before rendering the menu item
+          if (!isValidUrl(url)) return null; // Skip invalid URL items
 
           const additionalClasses = [];
 
@@ -57,9 +63,9 @@ export default function NavigationMenu({ menuItems, className }) {
               isCurrent && 'is-current'
             ),
             href: path || '#',
-            ...(item.title && { title: item.title }),
-            ...(item.target && { target: item.target }),
-            ...(item.target === '_blank' && !item.linkRelationship ? { rel: 'noopener noreferrer' } : item.linkRelationship && { rel: item.linkRelationship }),
+            ...(title && { title: title }),
+            ...(target && { target: target }),
+            ...(target === '_blank' && !linkRelationship ? { rel: 'noopener noreferrer' } : linkRelationship && { rel: linkRelationship }),
             ...(isCurrent && { 'aria-current': 'page' }),
             ...(children.length && { role: 'button' }),
             ...(children.length && { 'aria-expanded': 'false' })
@@ -87,21 +93,5 @@ export default function NavigationMenu({ menuItems, className }) {
 }
 
 NavigationMenu.fragments = {
-  entry: gql`
-    fragment NavigationMenuItemFragment on MenuItem {
-      id
-      path
-      label
-      parentId
-      cssClasses
-      title
-      target
-      linkRelationship
-      menu {
-        node {
-          name
-        }
-      }
-    }
-  `,
+  entry: NavigationMenuItemFragment,
 };

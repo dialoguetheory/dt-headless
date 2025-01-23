@@ -33,9 +33,7 @@ export default function SEO({ title, description, featuredImage, databaseId, url
 
   // Extract SEO data from the query result
   const seoData = data?.post?.seo || data?.page?.seo;
-
-  console.log(seoData);
-
+  
   // Use the data from the query if available, or fallback to the passed-in props
   const seoTitle = seoData?.title || title;
   const seoDescription = seoData?.metaDesc || description;

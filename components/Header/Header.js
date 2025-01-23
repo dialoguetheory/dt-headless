@@ -1,50 +1,35 @@
-import { useState } from 'react';
 import classNames from 'classnames/bind';
 import Link from 'next/link';
-import { Container, MegaMenu, SkipNavigationLink } from '../../components';
+import * as MENUS from '../../constants/menus';
+import { MegaMenu, MobileMenu, NavigationMenu, SkipNavigationLink } from '../../components';
 import styles from './Header.module.scss';
 
 const cx = classNames.bind(styles);
 
-export default function Header({ title = 'Headless by WP Engine', description, menuItems }) {
-  const [isNavShown, setIsNavShown] = useState(false);
-
-  const toggleNavigation = () => setIsNavShown((prev) => !prev);
+export default function Header({ title, description, menuItems }) {
 
   return (
-    <header className={cx('component')}>
+    <header className={`${cx('site-header')} grid grid--full`}>
       <SkipNavigationLink />
-
-      <Container className={cx('grid', 'grid--full')}>
-        <div className={cx('navbar', 'col-2-span-1')}>
-          {/* Branding */}
-          <div className={cx('brand')}>
-            <Link href="/" legacyBehavior>
-              <a className={cx('title')}>{title}</a>
-            </Link>
-            {description && <p className={cx('description')}>{description}</p>}
-          </div>
-
-          {/* Navigation Toggle */}
-          <button
-            type="button"
-            className={cx('nav-toggle')}
-            onClick={toggleNavigation}
-            aria-label={isNavShown ? 'Close navigation' : 'Open navigation'}
-            aria-controls="primary-navigation"
-            aria-expanded={isNavShown}
-          >
-            ☰
-          </button>
-
-          {/* Navigation Menu */}
+      <div id="js-site-logo" className={`${cx('site-logo')} col-2-span-12 row-1-span-1`}>
+        <Link href="/" legacyBehavior>
+          <a className={cx('title')}>{title}</a>
+        </Link>
+        {description && <p className={cx('description')}>{description}</p>}
+      </div>
+      {menuItems && menuItems.length > 0 && (
+        <div className={`${cx('navbar')} col-5-span-12 row-1-span-1`}>
           <MegaMenu
-            id="primary-navigation"
-            className={cx('primary-navigation', { show: isNavShown })}
-            menuItems={menuItems}
+            location={MENUS.PRIMARY_LOCATION}
+            className={cx('primary-navigation')}
+          />
+          <MobileMenu
+            location={MENUS.PRIMARY_LOCATION}
+            className={cx('primary-navigation-mobile')}
+            ariaControls={'primary-navigation-mobile'}
           />
         </div>
-      </Container>
+      )}
     </header>
   );
 }

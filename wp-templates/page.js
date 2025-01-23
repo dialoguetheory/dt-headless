@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 import * as MENUS from '../constants/menus';
 import { SiteInfoFragment } from '../fragments/GeneralSettings';
 import { SectionsFragment } from '../components/sections/SectionsFragment';
+import { NavigationMenuItemFragment } from '../fragments/NavigationItems';
 import PageSections from '../components/Sections/Sections.js';
 
 import {
@@ -11,17 +12,16 @@ import {
   Container,
   ContentWrapper,
   EntryHeader,
-  NavigationMenu,
   FeaturedImage,
   SEO,
-  TrackingScripts
+  TrackingScripts,
 } from '../components';
 
 export default function Component(props) {
   if (props.loading) {
     return <>Loading...</>;
   }
-  const { title: siteTitle, description: siteDescription } = 
+  const { title: siteTitle, description: siteDescription } =
     props?.data?.generalSettings;
   const primaryMenu = props?.data?.headerMenuItems?.nodes ?? [];
   const footerMenu = props?.data?.footerMenuItems?.nodes ?? [];
@@ -70,7 +70,7 @@ Component.variables = ({ databaseId }, ctx) => {
 
 Component.query = gql`
   ${SiteInfoFragment}
-  ${NavigationMenu.fragments.entry}
+  ${NavigationMenuItemFragment}
   ${FeaturedImage.fragments.entry}
   query GetPageData(
     $databaseId: ID!

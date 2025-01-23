@@ -1,137 +1,136 @@
-import { useEffect, useState } from 'react';
-import classNames from 'classnames/bind';
-import { gql } from '@apollo/client';
+import { useEffect, useState, useMemo } from 'react';
+import { useQuery } from '@apollo/client';
 import Link from 'next/link';
+import classNames from 'classnames/bind';
 import styles from './MegaMenu.module.scss';
 import stylesFromWP from './MegaMenuClassesFromWP.module.scss';
 import { flatListToHierarchical } from '@faustwp/core';
-// import { MegaMenu } from './MegaMenuScript';  // Import the MegaMenu class
+import { MENU_ITEMS_QUERY } from './MegaMenuItemsQuery.js';
+import { isValidUrl } from '../../utils/isValidUrl';
+import { MegaMenuSubMenu } from '../../components';
 
-let cx = classNames.bind(styles);
-let cxFromWp = classNames.bind(stylesFromWP);
+const cx = classNames.bind(styles);
+const cxFromWp = classNames.bind(stylesFromWP);
 
-export default function MegaMenu({ menuItems, className }) {
-  if (!menuItems) {
-    return null;
-  }
-
+export default function MegaMenu({ location, className }) {
   const [currentPath, setCurrentPath] = useState('');
+  const [openStates, setOpenStates] = useState({});
 
+  const { data, loading, error } = useQuery(MENU_ITEMS_QUERY, { variables: { location } });
+
+  // Set current path
   useEffect(() => {
-    let path = window.location.pathname;
-    if (!path.endsWith('/')) {
-      path += '/';
+    if (typeof window !== 'undefined') {
+      setCurrentPath(
+        window.location.pathname.endsWith('/')
+          ? window.location.pathname
+          : `${window.location.pathname}/`
+      );
     }
-    setCurrentPath(path);
-    // const megaMenu = new MegaMenu();
   }, []);
 
-  const hierarchicalMenuItems = flatListToHierarchical(menuItems);
+  // Close menus when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (!e.target.closest('#js-nav--main--mega')) setOpenStates({});
+    };
+    document.addEventListener('click', handleOutsideClick);
+    return () => document.removeEventListener('click', handleOutsideClick);
+  }, []);
 
-  console.log(menuItems);
+  // Hierarchical menu items
+  const hierarchicalMenuItems = useMemo(
+    () => (data?.menuItems?.nodes ? flatListToHierarchical(data.menuItems.nodes) : []),
+    [data]
+  );
 
-  function renderMenu(items, depth = 0) {
-    return (
-      <ul
-        className={cx('menu', 'has-megas', 'js-has-megas', depth > 0 ? 'sub-menu' : '', 'flex')}
-        data-depth={depth}>
-        {items.map((item) => {
-          const { id, path, label, children, cssClasses } = item;
+  // Toggle menu item state
+  const handleToggleMenu = (id) => {
+    setOpenStates((prev) => ({
+      [id]: !prev[id], // Toggle the clicked item
+    }));
+  };
 
-          if (!item.hasOwnProperty('__typename')) {
-            return null;
-          }
+  // Check if menu item is open
+  const isMenuItemOpen = (id) => !!openStates[id];
 
-          const additionalClasses = [];
+  // Render menu items
+  const renderMenuItems = (items, depth = 0) => {
+    return items.map((menuItem) => {
+      const {
+        id,
+        url,
+        title,
+        label,
+        cssClasses,
+        megaMenu,
+        path,
+        databaseId,
+        target,
+        linkRelationship,
+      } = menuItem;
 
-          const itemClasses = cx(
-            'menu-item',
-            depth === 0 ? 'menu-item-depth-0' : `menu-item-depth-${depth}`,
-            cxFromWp(cssClasses),
-            additionalClasses
-          );
+      if (!isValidUrl(url)) return null;
 
-          const isCurrent = currentPath === path;
+      const isOpen = isMenuItemOpen(id);
+      const isCurrent = currentPath === path;
+      const enableMegaMenu = megaMenu?.enableMegaMenu;
 
-          const linkAttributes = {
-            className: cx(
-              'menu-btn',
-              `menu-btn-depth-${depth}`,
-              children.length && 'has-children',
-              isCurrent && 'is-current'
-            ),
-            href: path || '#',
-            ...(item.title && { title: item.title }),
-            ...(item.target && { target: item.target }),
-            ...(item.target === '_blank' && !item.linkRelationship ? { rel: 'noopener noreferrer' } : item.linkRelationship && { rel: item.linkRelationship }),
-            ...(isCurrent && { 'aria-current': 'page' }),
-            ...(children.length && { role: 'button' }),
-            ...(children.length && { 'aria-expanded': 'false' })
-          };
+      return (
+        <li
+          key={id}
+          className={cx('menu-item', cxFromWp(cssClasses), `menu-item-depth-${depth}`)}
+        >
+          <Link
+            className={cx('menu-btn', `menu-btn-depth-${depth}`, {
+              'is-current': isCurrent,
+              'toggle-btn': enableMegaMenu,
+            })}
+            href={url || '#'}
+            title={title || undefined}
+            target={target || undefined}
+            rel={
+              target === '_blank' && !linkRelationship
+                ? 'noopener noreferrer'
+                : linkRelationship || undefined
+            }
+            aria-current={isCurrent ? 'page' : undefined}
+            aria-expanded={enableMegaMenu ? isOpen : undefined}
+            onClick={(e) => {
+              if (enableMegaMenu) {
+                e.preventDefault();
+                handleToggleMenu(id);
+              }
+            }}
+          >
+            {label || ''}
+          </Link>
+          {enableMegaMenu && (
+            <MegaMenuSubMenu
+              item={databaseId}
+              ariaHidden={isOpen ? 'false' : 'true'}
+            />
+          )}
+        </li>
+      );
+    });
+  };
 
-          return (
-            <li key={id} className={itemClasses}>
-              <Link {...linkAttributes}>{label ?? ''}</Link>
-              {children.length ? renderMenu(children, depth + 1) : null}
-            </li>
-          );
-        })}
-      </ul>
-    );
+  if (process.env.NODE_ENV === 'development') {
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error.message}</p>;
   }
 
   return (
     <nav
-      id={`js-nav--main--mega`}
-      className={cx(['component', className])}
+      id="js-nav--main--mega"
+      className={`${cx('component', 'menu', className)} visible@md`}
       role="navigation"
-      aria-label={`${menuItems[0]?.menu?.node?.name} menu`}>
-      {renderMenu(hierarchicalMenuItems)}
+      aria-label={data?.menuItems?.nodes[0]?.menu?.node?.name || 'Menu'}
+    >
+      <ul className={`${cx('menu')} has-megas js-has-megas`}>
+        {renderMenuItems(hierarchicalMenuItems)}
+      </ul>
     </nav>
   );
 }
-
-MegaMenu.fragments = {
-  entry: gql`
-    fragment MegaMenuItemFragment on MenuItem {
-      id
-      path
-      label
-      cssClasses
-      title
-      target
-      linkRelationship
-      parentId
-      menu {
-        node {
-          name
-        }
-      }
-      megaMenu {
-        fieldGroupName
-        megaDesc
-        links {
-          fieldGroupName
-          itemText
-          items {
-            fieldGroupName
-            ... on ItemsInternalLinkLayout {
-              title
-              post {
-                nodes {
-                  id
-                }
-              }
-              fieldGroupName
-            }
-            ... on ItemsExternalLinkLayout {
-              fieldGroupName
-              title
-              url
-            }
-          }
-        }
-      }
-    }
-  `,
-};

@@ -1,0 +1,33 @@
+@import 'styles/breakpoints';
+
+$mega-trans-inactive: #{"visibility 0s var(--trans-func) var(--trans-dur), transform var(--trans-dur), opacity var(--trans-dur)"};
+$mega-trans-active:   #{"visibility 0s var(--trans-func) 0s, transform var(--trans-dur), opacity var(--trans-dur)"};
+
+.mega {
+    visibility: hidden;
+    opacity: 0;
+	z-index: 8;    
+
+	position: absolute;
+	width: 100%;
+	left: 0;
+	right: 0;
+	top: 100%;
+
+	display: flex;
+	justify-content: flex-end;
+	flex-direction: column;
+	gap: 0;
+
+	transition: #{$mega-trans-inactive};
+	transform: translateY(-40px);
+
+	background-color: var(--wpe--dropdown--background-color);
+
+    &[aria-hidden="false"]  {
+		visibility: visible;
+		opacity: 1;
+		transform: translateY(0);
+		transition: #{$mega-trans-active};
+    }
+}

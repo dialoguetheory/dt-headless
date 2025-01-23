@@ -1,26 +1,14 @@
 @import 'styles/breakpoints';
 
+.site-header {
+	position: relative;
+}
+
 .component {
 	color: var(--wpe--header--color);
 	background-color: var(--wpe--header--background-color);
 	position: relative;
 	z-index: 2; // Pull dropdown menus to the foreground to sit above <Main />.
-}
-
-.navbar {
-	display: flex;
-	justify-content: space-between;
-	flex-wrap: wrap;
-	padding: 3rem 0;
-	gap: 1rem;
-}
-
-.brand {
-	font-weight: var(--wpe--font-weight--bold);
-	font-size: 1.6rem;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
 }
 
 .title {
@@ -52,7 +40,7 @@
 		color: var(--wpe--color--black);
 	}
 
-	@media (min-width: $breakpoint-sm) {
+	@media (min-width: $breakpoint-md) {
 		display: none !important;
 	}
 }
@@ -65,7 +53,7 @@
 		display: block;
 	}
 
-	@media (min-width: $breakpoint-sm) {
+	@media (min-width: $breakpoint-md) {
 		display: block;
 		width: auto;
 	}
