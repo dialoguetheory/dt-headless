@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { Section } from "../../../components";
 import className from 'classnames/bind';
 import styles from './MediaSlider.module.scss';
-import useSectionProps from '../../../hooks/useSectionProps';
 import CustomButtons from './CustomButtons';
 import CustomPageDots from './CustomPageDots';
 import SliderCounter from './SliderCounter';
@@ -13,8 +13,6 @@ import 'flickity/dist/flickity.min.css';
 let cx = className.bind(styles || {});
 
 const MediaSliderSection = ({
-  dataFromPrevious,
-  onDataPass,
   index,
   sectionTitle,
   hideSectionTitle,
@@ -34,6 +32,9 @@ const MediaSliderSection = ({
   counter = false,
   progressBar = false,
   pauseOnHover = true,
+  onPageCount,
+  dataFromPrevious, 
+  onDataPass,
 }) => {
   const originalSliderRef = useRef(null);
   const originalInstanceRef = useRef(null);
@@ -104,22 +105,16 @@ const MediaSliderSection = ({
 
   if (!sectionTitle && !sectionDesc && !slides.length) return null;
 
-  const { sectionProps } = useSectionProps({}, dataFromPrevious, onDataPass);
   const hideHeader = !sectionTitle || (hideSectionTitle && !sectionDesc) ? 'visually-hidden' : '';
 
+  const props = {
+    id: onPageCount,
+    classes: `${cx('media-slider')} js-contains-slider`
+  }
+
   return (
-    <section
-      id={index}
-      className={cx(
-        'section',
-        'col-1-span-14',
-        'grid',
-        'grid--full',
-        'js-contains-slider',
-        sectionClasses,
-        sectionProps.classes
-      )}
-    >
+
+    <Section props={props} dataFromPrevious={dataFromPrevious} onDataPass={onDataPass}>
       <div className={cx('section__header', 'col-2-span-12', 'flex-dir-col', hideHeader)}>
         {sectionTitle && (
           <h2 className={cx('section__title', 'h2', { 'visually-hidden': hideSectionTitle })}>
@@ -188,7 +183,7 @@ const MediaSliderSection = ({
           )}
         </div>
       )}
-    </section>
+    </Section>
   );
 };
 
@@ -235,6 +230,9 @@ MediaSliderSection.propTypes = {
   pauseOnHover: PropTypes.bool,
   progressBar: PropTypes.bool,
   timer: PropTypes.arrayOf(PropTypes.oneOf(['single', 'all'])),
+  onPageCount: PropTypes.number.isRequired,
+  dataFromPrevious: PropTypes.object,
+  onDataPass: PropTypes.func,
 };
 
 export default MediaSliderSection;

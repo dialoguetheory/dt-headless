@@ -9,7 +9,7 @@ $nav-default-ht: 48px;
 :root {
 
 	--header-offset-top: 0px;
-	--header-ht: 66px;
+	--header-ht: 108px;
 	// Combined height of any/all visible top bars including alerts & promos
 	--header-ht-plus: #{"calc(var(--header-ht) + var(--header-offset-top))"};
 

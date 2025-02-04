@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { Section } from "../../../components";
 import className from 'classnames/bind';
 import styles from './TestimonialSlider.module.scss';
-import useSectionProps from '../../../hooks/useSectionProps';
 import 'flickity/dist/flickity.min.css'; // Import Flickity CSS
 
 let cx = className.bind(styles);
@@ -14,8 +14,6 @@ const TestimonialSliderSection = ({
   sectionDesc,
   sectionClasses,
   slides,
-  dataFromPrevious,
-  onDataPass,
   index,
   adaptiveHeight,
   captions,
@@ -24,6 +22,9 @@ const TestimonialSliderSection = ({
   speed,
   setGallerySize,
   thumbs,
+  onPageCount,
+  dataFromPrevious, 
+  onDataPass,
 }) => {
   const originalSliderRef = useRef(null);
   const thumbnailSliderRef = useRef(null);
@@ -74,13 +75,14 @@ const TestimonialSliderSection = ({
   }
 
   const hideHeader = (!sectionTitle || (hideSectionTitle && !sectionDesc)) && 'visually-hidden';
-  const { sectionProps } = useSectionProps({}, dataFromPrevious, onDataPass);
+
+  const props = {
+    id: onPageCount,
+    classes: `${cx('testimonial-slider')} js-contains-slider`
+  }
 
   return (
-    <section
-      id={index}
-      className={cx('section', 'col-1-span-14', 'grid', 'grid--full', 'js-contains-slider', `${sectionClasses}`, `${sectionProps.classes}`)}
-    >
+    <Section props={props} dataFromPrevious={dataFromPrevious} onDataPass={onDataPass}>
       <div className={cx('section__header', 'col-2-span-12', 'flex-dir-col', `${hideHeader}`)}>
         {sectionTitle && (
           <h2
@@ -154,7 +156,7 @@ const TestimonialSliderSection = ({
 
         
       </div>
-    </section>
+    </Section>
   );
 };
 
@@ -181,6 +183,9 @@ TestimonialSliderSection.propTypes = {
   captions: PropTypes.bool,
   timer: PropTypes.bool,
   counter: PropTypes.bool,
+  onPageCount: PropTypes.number.isRequired,
+  dataFromPrevious: PropTypes.object,
+  onDataPass: PropTypes.func,
 };
 
 export default TestimonialSliderSection;

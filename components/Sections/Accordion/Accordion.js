@@ -1,7 +1,7 @@
-import PropTypes from 'prop-types';
 import className from 'classnames/bind';
+import { Section } from "../../../components";
 import styles from './Accordion.module.scss';
-import useSectionProps from '../../../hooks/useSectionProps';
+import DOMPurify from 'dompurify';
 import {
   handleItem,
   shrink,
@@ -16,21 +16,28 @@ const AccordionSection = ({
   sectionDesc,
   sectionClasses,
   items,
+  onPageCount,
   dataFromPrevious, 
   onDataPass,
-  index
 }) => {
 
   if (!sectionTitle && !sectionDesc && !items) {
     return null;
   }
 
-  let hideHeader = (!sectionTitle || (hideSectionTitle && !sectionDesc)) && 'visually-hidden';
-  let { sectionProps } = useSectionProps({}, dataFromPrevious, onDataPass);
+  let hideHeader = (!sectionTitle || (hideSectionTitle && !sectionDesc)) ? true : false;
+
+  const props = {
+    id: onPageCount,
+    classes: cx("accordion", sectionClasses)
+  }
 
   return (
-    <section id={index} className={cx('section', 'col-1-span-14', 'grid', 'grid--full', `${sectionClasses}`, `${sectionProps.classes}`)}>
-      <div className={cx('section__header', 'col-2-span-12', 'flex-dir-col', `${hideHeader}`)}>
+    <Section props={props} dataFromPrevious={dataFromPrevious} onDataPass={onDataPass}>
+      <div className={cx('section__header', 'flex-dir-col', 'col-2-span-12', {
+        'visually-hidden': hideHeader,
+        })}
+      >
         {sectionTitle && (
           <h2
             className={cx('section__title', 'h2', {
@@ -41,10 +48,10 @@ const AccordionSection = ({
           </h2>
         )}
         {sectionDesc && (
-            <div className={cx('section__desc', 'rt')} dangerouslySetInnerHTML={{ __html: sectionDesc }} />
+            <div className={cx('section__desc', 'rt')} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(sectionDesc) }} />
         )}
       </div>
-      <div className="section__content col-2-span-12 col-3-span-9@md">
+      <div className={cx('section__content', 'col-2-span-12', 'col-3-span-9@md')}>
         {items.map((item, index) => {
           const { title, desc } = item;
           if (!title || !desc) {
@@ -56,13 +63,13 @@ const AccordionSection = ({
                 {title}
               </summary>
               <div className={cx('js-accordion-content', 'content')}>
-                <div className={cx('rt')} dangerouslySetInnerHTML={{ __html: desc }} />
+                <div className={cx('rt')} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(desc) }} />
               </div>
             </details>
           );
         })}
       </div>
-    </section>
+    </Section>
   );
 };
 
@@ -71,6 +78,7 @@ AccordionSection.propTypes = {
   hideSectionTitle: PropTypes.bool,
   sectionDesc: PropTypes.string,
   sectionClasses: PropTypes.string,
+  onPageCount: PropTypes.number.isRequired,
   dataFromPrevious: PropTypes.object,
   onDataPass: PropTypes.func,
 };

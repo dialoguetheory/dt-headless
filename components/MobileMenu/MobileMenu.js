@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useQuery } from '@apollo/client';
 import Link from 'next/link';
 import classNames from 'classnames/bind';
@@ -26,11 +26,7 @@ export default function MobileMenu({ location, className, ariaControls }) {
   // Set current path
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setCurrentPath(
-        window.location.pathname.endsWith('/')
-          ? window.location.pathname
-          : `${window.location.pathname}/`
-      );
+      setCurrentPath(window.location.pathname.endsWith('/') ? window.location.pathname : `${window.location.pathname}/`);
     }
   }, []);
 
@@ -60,7 +56,7 @@ export default function MobileMenu({ location, className, ariaControls }) {
   }, []);
 
   // Toggle the entire navigation
-  const toggleNavigation = () => {
+  const toggleNavigation = useCallback(() => {
     if (!isNavShown) {
       setIsOpening(true);
       setTimeout(() => {
@@ -70,41 +66,24 @@ export default function MobileMenu({ location, className, ariaControls }) {
     } else {
       setIsNavShown(false);
     }
-  };
+  }, [isNavShown]);
 
   // Toggle individual menu items
-  const toggleMenuItem = (id) => {
-    setOpenStates((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
+  const toggleMenuItem = useCallback(id => {
+    setOpenStates(prev => ({ ...prev, [id]: !prev[id] }));
+  }, []);
 
   // Check if a menu item is open
-  const isMenuItemOpen = (id) => !!openStates[id];
+  const isMenuItemOpen = useCallback(id => !!openStates[id], [openStates]);
 
   // Process hierarchical menu items
-  const hierarchicalMenuItems = useMemo(
-    () => (data?.menuItems?.nodes ? flatListToHierarchical(data.menuItems.nodes) : []),
-    [data]
-  );
+  const hierarchicalMenuItems = useMemo(() => 
+    data?.menuItems?.nodes ? flatListToHierarchical(data.menuItems.nodes) : [], [data]);
 
   // Render menu items recursively
-  const renderMenuItems = (items, depth = 0) =>
-    items.map((menuItem) => {
-      const {
-        id,
-        url,
-        title,
-        label,
-        cssClasses,
-        megaMenu,
-        path,
-        databaseId,
-        target,
-        linkRelationship,
-      } = menuItem;
-
+  const renderMenuItems = useCallback((items, depth = 0) => 
+    items.map(menuItem => {
+      const { id, url, title, label, cssClasses, megaMenu, path, databaseId, target, linkRelationship } = menuItem;
       const isValid = isValidUrl(url);
       const isOpen = isMenuItemOpen(id);
       const isCurrent = currentPath === path;
@@ -118,18 +97,11 @@ export default function MobileMenu({ location, className, ariaControls }) {
             href={url || '#'}
             title={title || undefined}
             target={target || undefined}
-            rel={
-              target === '_blank' && !linkRelationship
-                ? 'noopener noreferrer'
-                : linkRelationship || undefined
-            }
+            rel={target === '_blank' && !linkRelationship ? 'noopener noreferrer' : linkRelationship || undefined}
             aria-current={isCurrent ? 'page' : undefined}
-            className={cx('menu-btn', `menu-btn-depth-${depth}`, {
-              'is-current': isCurrent,
-              'toggle-btn': enableMegaMenu,
-            })}
+            className={cx('menu-btn', `menu-btn-depth-${depth}`, { 'is-current': isCurrent, 'toggle-btn': enableMegaMenu })}
             aria-expanded={enableMegaMenu ? isOpen : undefined}
-            onClick={(e) => {
+            onClick={e => {
               if (enableMegaMenu) {
                 e.preventDefault();
                 toggleMenuItem(id);
@@ -138,15 +110,10 @@ export default function MobileMenu({ location, className, ariaControls }) {
           >
             {label || ''}
           </Link>
-          {enableMegaMenu && (
-            <MegaMenuSubMenu
-              item={databaseId}
-              ariaHidden={isOpen ? 'false' : 'true'}
-            />
-          )}
+          {enableMegaMenu && <MegaMenuSubMenu item={databaseId} ariaHidden={isOpen ? 'false' : 'true'} />}
         </li>
       );
-    });
+    }), [currentPath, openStates, toggleMenuItem, isMenuItemOpen]);
 
   if (process.env.NODE_ENV === 'development') {
     if (loading) return <p>Loading...</p>;
@@ -158,23 +125,20 @@ export default function MobileMenu({ location, className, ariaControls }) {
       <button
         type="button"
         id="js-tray__toggle"
-        className={`${cx('tray__toggle')} hidden@md`}
+        className={`${cx('tray__toggle')} hidden@md unbtn`}
         onClick={toggleNavigation}
         aria-label={isNavShown ? 'Close navigation' : 'Open navigation'}
         aria-controls={ariaControls}
         aria-expanded={isNavShown}
       >
         <div className={cx('tray__toggle-inner')}>
-          <span className="screen-reader-text">{`Toggle mobile menu`}</span>
+          <span className="screen-reader-text">Toggle mobile menu</span>
           <MenuToggleIcon />
         </div>
       </button>
       <div
         id="js-tray"
-        className={`${cx('tray', {
-          [openStartedClass]: isOpening,
-          [openedClass]: isNavShown,
-        })} col-1-span-14 grid grid--full`}
+        className={cx('tray', { [openStartedClass]: isOpening, [openedClass]: isNavShown }, 'col-1-span-14', 'grid', 'grid--full')}
       >
         <nav
           id="js-nav--main--tray"
@@ -182,7 +146,7 @@ export default function MobileMenu({ location, className, ariaControls }) {
           role="navigation"
           aria-label={data?.menuItems?.nodes[0]?.menu?.node?.name || 'Menu'}
         >
-          <ul className={`${cx('menu')} has-megas js-has-megas`}>
+          <ul className={cx('menu')}>
             {renderMenuItems(hierarchicalMenuItems)}
           </ul>
         </nav>

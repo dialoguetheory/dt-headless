@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './MegaMenuSubMenu.module.scss';
 import { useQuery, gql } from '@apollo/client';
+import DOMPurify from 'dompurify';
 
 const cx = classNames.bind(styles);
 
@@ -21,9 +22,11 @@ export default function MegaMenuSubMenu({ item, ariaHidden }) {
     variables: { id: item },
   });
 
-  if (loading || error || !data?.menuItem?.megaMenu?.megaDesc) {
-    return null; // Prevent rendering unnecessary content
-  }
+  // Handle loading, error, or missing description
+  if (loading || error || !data?.menuItem?.megaMenu?.megaDesc) return null;
+
+  // Sanitize the HTML content
+  const sanitizedDescription = DOMPurify.sanitize(data.menuItem.megaMenu.megaDesc);
 
   return (
     <div
@@ -33,7 +36,7 @@ export default function MegaMenuSubMenu({ item, ariaHidden }) {
       <div className={`${cx('mega__container')} col-2-span-12 grid`}>
         <div
           className={`${cx('mega-description')} col-1-span-4`}
-          dangerouslySetInnerHTML={{ __html: data.menuItem.megaMenu.megaDesc }}
+          dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
         />
       </div>
     </div>

@@ -3,24 +3,19 @@
 
 .tray {
 
-	--vert-marg: 16px;
-
 	// Initial state
 	display: none;
 	opacity: 0;
 
-	// Basics
-	// position: fixed;
 	position: fixed;
-	top: 0;
+	top: var(--header-ht);
 	bottom: 0;
 	right: 0;
 	width: var(--tray-w, 100vw);
 	height: 100vh;
-	// padding-top: #{"calc(var(--topbar-ht) + var(--btmbar-ht) + var(--header-pos-top, 0px))"};
-	padding-top: 60px;
-	// padding-bottom: 400px; // make room for bottom bar
+	padding-top: 40px;
 	padding-bottom: 160px;
+	padding-right: var(--page-gutter);
 	z-index: 1000;
 	overflow-y: scroll;
 	overflow-x: hidden;
@@ -33,9 +28,7 @@
 
 	// Aesthetics
 	background-color: white;
-	color: var(--tray-fg);
 	text-align: right;
-
 }
 
 .tray-open-started.tray,
@@ -56,23 +49,19 @@ html:not(.keyboard-tray-enabled) .tray:focus {
 // Tray =Toggle Button
 // =Navicon
 // -----------------------------
-
-$navicon-line-3-y: 24px;
-
 .tray__toggle {
 	position: absolute;
-	z-index: 1001;
-	right: 0;
-	// top: 0;
-	bottom: -8px;
-	padding: #{"16px calc(var(--gutter-container) - 3px)"};
+    z-index: 1001;
+    right: var(--page-gutter);
+    top: 50%;
+    transform: translate(0px, -50%);
 }
 
 .tray__toggle svg {
 	overflow: visible;
 }
 
-.tray__toggle-line {
+.tray__toggle svg line {
 	transition-duration: var(--trans-dur);
 	transition-property: transform;
 	transition-timing-function: var(--trans-func);
@@ -81,16 +70,13 @@ $navicon-line-3-y: 24px;
 }
 
 // @related: naviconpos (inline SVG attributes overridden by CSS)
-.tray__toggle-line--1 {
-	// transform: translate(0, 0);
+.tray__toggle line:first-child {
 	transform: translate(3px, 2px);
 }
-.tray__toggle-line--2 {
-	// transform: translate(4px, 12px);
-	transform: translate(7px, 14px);
+.tray__toggle line:nth-child(2) {
+	transform: translate(3px, 14px);
 }
-.tray__toggle-line--3 {
-	// transform: translate(0, 24px);
+.tray__toggle line:nth-child(3) {
 	transform: translate(3px, 26px);
 }
 
@@ -99,24 +85,19 @@ $navicon-line-3-y: 24px;
 // Toggle (opened)
 // ---------------
 .tray__toggle:hover,
-// .tray__toggle:focus,
-.tray-opened.tray__toggle {
-	color: var(--tray-toggle-hover) !important;
+.tray__toggle[aria-expanded="true"] {
+	color: red;
 }
 
-.tray-opened.tray__toggle {
-	color: var(--tray-toggle);
-}
-
-.tray-opened .tray__toggle-line--1 {
+.tray__toggle[aria-expanded="true"] line:first-child {
 	transform: translate(6px, 2px) rotate(45deg) scaleX(1.1);
 }
 
-.tray-opened .tray__toggle-line--2 {
+.tray__toggle[aria-expanded="true"] line:nth-child(2) {
 	opacity: 0;
 }
 
-.tray-opened .tray__toggle-line--3 {
+.tray__toggle[aria-expanded="true"] line:nth-child(3) {
 	transform: translate(6px, 26px) rotate(-45deg) scaleX(1.1);
 }
 

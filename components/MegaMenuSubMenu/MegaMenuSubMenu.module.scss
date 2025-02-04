@@ -20,9 +20,12 @@ $mega-trans-active:   #{"visibility 0s var(--trans-func) 0s, transform var(--tra
 	gap: 0;
 
 	transition: #{$mega-trans-inactive};
-	transform: translateY(-40px);
+	transform: translateY(-10px);
 
 	background-color: var(--wpe--dropdown--background-color);
+	box-shadow: 0px 9px 7px -5px whitesmoke;
+
+	padding: 40px 0;
 
     &[aria-hidden="false"]  {
 		visibility: visible;

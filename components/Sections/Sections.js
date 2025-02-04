@@ -36,7 +36,7 @@ const SectionRenderer = ({ sectionType, sectionData, args, dataFromPrevious, onD
     );
 };
 
-const PageSections = ({ sections }) => {
+const AdditionalSections = ({ sections }) => {
 
   if (!sections || sections.length === 0) {
     return null;
@@ -130,4 +130,4 @@ function StripWordsFromLayoutName(stringToStrip) {
     return stringToStrip.replace(regex, '');
 }
   
-export default PageSections;
+export default AdditionalSections;

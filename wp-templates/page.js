@@ -13,33 +13,32 @@ import {
   ContentWrapper,
   EntryHeader,
   FeaturedImage,
-  SEO,
-  TrackingScripts,
+  SiteHead,
 } from '../components';
 
 export default function Component(props) {
-  if (props.loading) {
-    return <>Loading...</>;
+  if (process.env.NODE_ENV === 'development') {
+    if (props.loading) return <p>Loading...</p>;
   }
+
   const { title: siteTitle, description: siteDescription } =
     props?.data?.generalSettings;
   const primaryMenu = props?.data?.headerMenuItems?.nodes ?? [];
   const footerMenu = props?.data?.footerMenuItems?.nodes ?? [];
-  const { title, content, featuredImage, databaseId, link } = props?.data?.page ?? {
+  const { 
+    title, 
+    content, 
+    featuredImage, 
+    databaseId, 
+    link 
+  } = props?.data?.page ?? {
     title: '',
   };
   const sections = props?.data?.page?.additionalSections?.sections || [];
 
   return (
     <>
-      <SEO
-        title={title}
-        description={siteDescription}
-        image={featuredImage}
-        url={link}
-        databaseId={databaseId}
-      />
-      <TrackingScripts />
+      <SiteHead fullHead={fullHead} />
       <Header
         title={siteTitle}
         description={siteDescription}
@@ -84,6 +83,11 @@ Component.query = gql`
       content
       link
       ...FeaturedImageFragment
+      seo {
+        metaDesc
+        title
+        fullHead
+      }
     }
     generalSettings {
       ...SiteInfoFragment

@@ -37,15 +37,8 @@ FeaturedImage.fragments = {
       featuredImage {
         node {
           id
-          databaseId
           sourceUrl
           altText
-          imagesTextLegibilityOptions {
-            bgAlign
-            bgColor
-            bgTint
-            bgTintColor
-          }
           mediaDetails {
             width
             height
