@@ -1,14 +1,16 @@
+import PropTypes from 'prop-types';
 import className from 'classnames/bind';
 import { Section } from "../../../components";
 import styles from './Accordion.module.scss';
-import DOMPurify from 'dompurify';
+import DOMPurify from "isomorphic-dompurify";
+
 import {
   handleItem,
   shrink,
   open
 } from './accordionScripts';
 
-let cx = className.bind(styles);
+const cx = className.bind(styles);
 
 const AccordionSection = ({
   sectionTitle,
@@ -16,19 +18,17 @@ const AccordionSection = ({
   sectionDesc,
   sectionClasses,
   items,
-  onPageCount,
+  index,
   dataFromPrevious, 
   onDataPass,
 }) => {
 
-  if (!sectionTitle && !sectionDesc && !items) {
-    return null;
-  }
+  if (!sectionTitle && !sectionDesc) return null;
 
-  let hideHeader = (!sectionTitle || (hideSectionTitle && !sectionDesc)) ? true : false;
+  const hideHeader = !sectionTitle || (hideSectionTitle && !sectionDesc);
 
   const props = {
-    id: onPageCount,
+    id: index,
     classes: cx("accordion", sectionClasses)
   }
 
@@ -39,11 +39,7 @@ const AccordionSection = ({
         })}
       >
         {sectionTitle && (
-          <h2
-            className={cx('section__title', 'h2', {
-                'visually-hidden': hideSectionTitle,
-            })}
-            >
+          <h2 className={cx('section__title', 'h2', { 'visually-hidden': hideSectionTitle })}>
             {sectionTitle}
           </h2>
         )}
@@ -53,17 +49,19 @@ const AccordionSection = ({
       </div>
       <div className={cx('section__content', 'col-2-span-12', 'col-3-span-9@md')}>
         {items.map((item, index) => {
-          const { title, desc } = item;
-          if (!title || !desc) {
+          const { itemTitle, itemContent } = item;
+          if (!itemTitle || !itemContent) {
             return null;
           }
           return (
             <details className={cx('details')} key={index}>
               <summary className={cx('summary', 'h3')} onClick={(e) => handleItem(e, open, shrink)}>
-                {title}
+                {itemTitle}
               </summary>
-              <div className={cx('js-accordion-content', 'content')}>
-                <div className={cx('rt')} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(desc) }} />
+              <div className={cx('content')} data-accordion="content">
+                {itemContent && (
+                  <div className={cx('rt')} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(itemContent) }} />
+                )}
               </div>
             </details>
           );
@@ -78,7 +76,7 @@ AccordionSection.propTypes = {
   hideSectionTitle: PropTypes.bool,
   sectionDesc: PropTypes.string,
   sectionClasses: PropTypes.string,
-  onPageCount: PropTypes.number.isRequired,
+  index: PropTypes.number.isRequired,
   dataFromPrevious: PropTypes.object,
   onDataPass: PropTypes.func,
 };

@@ -2,28 +2,26 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './Basic.module.scss';
 import { Section } from "../../../components";
-import DOMPurify from 'dompurify';
+import DOMPurify from "isomorphic-dompurify";
 
-let cx = classNames.bind(styles);
+const cx = classNames.bind(styles);
 
 const BasicSection = ({
   sectionTitle,
   hideSectionTitle,
   sectionDesc,
   sectionClasses,
-  onPageCount,
+  index,
   dataFromPrevious, 
   onDataPass,
 }) => {
 
-  if (!sectionTitle && !sectionDesc) {
-    return null;
-  }
+  if (!sectionTitle && !sectionDesc) return null;
 
-  let hideHeader = (!sectionTitle || (hideSectionTitle && !sectionDesc)) ? true : false;
+  const hideHeader = !sectionTitle || (hideSectionTitle && !sectionDesc);
 
   const props = {
-    id: onPageCount,
+    id: index,
     classes: cx('simple', sectionClasses)
   }
 
@@ -34,11 +32,7 @@ const BasicSection = ({
         })}
       >
         {sectionTitle && (
-          <h2
-            className={cx('section__title', 'h2', {
-                'visually-hidden': hideSectionTitle,
-            })}
-          >
+          <h2 className={cx('section__title', 'h2', { 'visually-hidden': hideSectionTitle })}>
             {sectionTitle}
           </h2>
         )}
@@ -55,7 +49,7 @@ BasicSection.propTypes = {
   hideSectionTitle: PropTypes.bool,
   sectionDesc: PropTypes.string,
   sectionClasses: PropTypes.string,
-  onPageCount: PropTypes.number.isRequired,
+  index: PropTypes.number.isRequired,
   dataFromPrevious: PropTypes.object,
   onDataPass: PropTypes.func,
 };

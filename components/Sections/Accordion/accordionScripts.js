@@ -41,7 +41,7 @@ export function expand(details) {
   details.isExpanding = true;
 
   const summary = details.querySelector('summary');
-  const content = details.querySelector('.js-accordion-content');
+  const content = details.querySelector('[data-accordion="content"]')
   const startHeight = `${details.offsetHeight}px`;
   const endHeight = `${summary.offsetHeight + content.offsetHeight}px`;
 

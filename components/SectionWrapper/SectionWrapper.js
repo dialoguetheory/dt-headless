@@ -45,8 +45,10 @@ const Section = ({ props = {}, children, dataFromPrevious, onDataPass }) => {
     // Merge defaultSettings with provided data
     let settings = { ...defaultSettings, ...props };
 
+    console.log(settings);
+
     // Update classes
-    settings.classes = classNames(settings.classes, 'col-1-span-14', 'grid', 'grid--full', 'section', 'js-section');
+    settings.classes = classNames(settings.classes, 'col-1-span-14', 'grid', 'grid--full', 'section');
 
     // Set ID
     settings.id = isNaN(settings.id) ? settings.id : `section${+settings.id}`;
@@ -104,7 +106,7 @@ const Section = ({ props = {}, children, dataFromPrevious, onDataPass }) => {
     }, [settings.classes, settings.bgColor, dataFromPrevious, onDataPass, currentData]);
 
     return (
-        <section className={sectionProps.classes}>
+        <section className={sectionProps.classes} data-element="section">
             <ScrollHelpers id={settings.id} />
             {children}
         </section>

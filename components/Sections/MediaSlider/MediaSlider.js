@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Section } from "../../../components";
+import DOMPurify from "isomorphic-dompurify"
 import className from 'classnames/bind';
 import styles from './MediaSlider.module.scss';
 import CustomButtons from './CustomButtons';
@@ -32,7 +33,6 @@ const MediaSliderSection = ({
   counter = false,
   progressBar = false,
   pauseOnHover = true,
-  onPageCount,
   dataFromPrevious, 
   onDataPass,
 }) => {
@@ -108,13 +108,13 @@ const MediaSliderSection = ({
   const hideHeader = !sectionTitle || (hideSectionTitle && !sectionDesc) ? 'visually-hidden' : '';
 
   const props = {
-    id: onPageCount,
-    classes: `${cx('media-slider')} js-contains-slider`
+    id: index,
+    classes: cx('media-slider', 'js-contains-slider', sectionClasses)
   }
 
   return (
 
-    <Section props={props} dataFromPrevious={dataFromPrevious} onDataPass={onDataPass}>
+    <Section props={props} dataFromPrevious={dataFromPrevious} onDataPass={onDataPass} data-slider={"wrapper"}>
       <div className={cx('section__header', 'col-2-span-12', 'flex-dir-col', hideHeader)}>
         {sectionTitle && (
           <h2 className={cx('section__title', 'h2', { 'visually-hidden': hideSectionTitle })}>
@@ -122,13 +122,13 @@ const MediaSliderSection = ({
           </h2>
         )}
         {sectionDesc && (
-          <div className={cx('section__desc', 'rt')} dangerouslySetInnerHTML={{ __html: sectionDesc }} />
+          <div className={cx('section__desc', 'rt')} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(sectionDesc) }} />
         )}
       </div>
 
       {slides.length > 0 && (
         <div className={cx('section__content', 'col-1-span-14')} data-state={sliderState}>
-          <div ref={originalSliderRef} className={cx('slider', 'js-slider', { 'js-slider-principal': thumbs })}>
+          <div ref={originalSliderRef} className={cx('slider', 'js-slider', { 'js-slider-principal': thumbs })} data-slider={"principal"}>
             {slides.map((slide, idx) => (
               <div key={`original-${idx}`} className={cx('slider-cell')}>
                 <figure>
@@ -139,7 +139,7 @@ const MediaSliderSection = ({
                     srcSet={slide.image.node.srcSet}
                   />
                   {captions && slide.image.node.caption && (
-                    <figcaption dangerouslySetInnerHTML={{ __html: slide.image.node.caption }} />
+                    <figcaption>{slide.image.node.caption}</figcaption>
                   )}
                 </figure>
               </div>
@@ -168,7 +168,7 @@ const MediaSliderSection = ({
           )}
 
           {thumbs && (
-            <div ref={thumbnailSliderRef} className={cx('slider', 'js-slider', 'js-slider-thumbnails')}>
+            <div ref={thumbnailSliderRef} className={cx('slider', 'js-slider', 'js-slider-thumbnails')} data-slider={"thumbnails"}>
               {slides.map((slide, idx) => (
                 <div key={`thumbnail-${idx}`} className={cx('slider-cell')}>
                   <img
@@ -188,6 +188,7 @@ const MediaSliderSection = ({
 };
 
 MediaSliderSection.propTypes = {
+  index: PropTypes.number.isRequired,
   dataFromPrevious: PropTypes.object,
   onDataPass: PropTypes.func,
   sectionTitle: PropTypes.string,
@@ -230,7 +231,6 @@ MediaSliderSection.propTypes = {
   pauseOnHover: PropTypes.bool,
   progressBar: PropTypes.bool,
   timer: PropTypes.arrayOf(PropTypes.oneOf(['single', 'all'])),
-  onPageCount: PropTypes.number.isRequired,
   dataFromPrevious: PropTypes.object,
   onDataPass: PropTypes.func,
 };

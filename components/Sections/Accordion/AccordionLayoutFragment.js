@@ -4,6 +4,7 @@ export const AccordionLayoutFragment = gql`
   fragment AccordionLayoutFragment on AdditionalSectionsSectionsAccordionLayout {
     fieldGroupName
     hideSectionTitle
+    sectionLabel
     sectionTitle
     sectionDesc
     anchorDest {
@@ -12,8 +13,8 @@ export const AccordionLayoutFragment = gql`
       }
     }
     items {
-      desc
-      title
+      itemTitle
+      itemContent
     }
   }
 `;

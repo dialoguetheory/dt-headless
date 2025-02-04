@@ -9,8 +9,12 @@ export const SectionsFragment = gql`
       sections {
         fieldGroupName
         ...BasicLayoutFragment
+        ...AccordionLayoutFragment
+        ...MediaSliderLayoutFragment
       }
     }
   }
   ${BasicLayoutFragment}
+  ${AccordionLayoutFragment}
+  ${MediaSliderLayoutFragment}
 `;

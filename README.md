@@ -25,3 +25,7 @@ All external contributors to WP Engine products must have a signed Contributor L
 
 Update values in constants for breakpoints and menu locations
 
+
+Using isomorphic-dompurify to sanitize 
+https://sentry.io/answers/using-dangerouslysetinnerhtml-in-next-js/
+https://www.npmjs.com/package/isomorphic-dompurify

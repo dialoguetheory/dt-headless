@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Section } from "../../../components";
+import DOMPurify from "isomorphic-dompurify";
 import className from 'classnames/bind';
 import styles from './TestimonialSlider.module.scss';
 import 'flickity/dist/flickity.min.css'; // Import Flickity CSS
@@ -74,30 +75,29 @@ const TestimonialSliderSection = ({
     return null;
   }
 
-  const hideHeader = (!sectionTitle || (hideSectionTitle && !sectionDesc)) && 'visually-hidden';
+  const hideHeader = !sectionTitle || (hideSectionTitle && !sectionDesc);
 
   const props = {
     id: onPageCount,
-    classes: `${cx('testimonial-slider')} js-contains-slider`
+    classes: cx('testimonial-slider', 'js-contains-slider', sectionClasses)
   }
 
   return (
     <Section props={props} dataFromPrevious={dataFromPrevious} onDataPass={onDataPass}>
-      <div className={cx('section__header', 'col-2-span-12', 'flex-dir-col', `${hideHeader}`)}>
+      <div className={cx('section__header', 'flex-dir-col', 'col-2-span-12', {
+        'visually-hidden': hideHeader,
+        })}
+      >
         {sectionTitle && (
-          <h2
-            className={cx('section__title', 'h2', {
-              'visually-hidden': hideSectionTitle,
-            })}
-          >
+          <h2 className={cx('section__title', 'h2', { 'visually-hidden': hideSectionTitle })}>
             {sectionTitle}
           </h2>
         )}
         {sectionDesc && (
-          <div className={cx('section__desc', 'rt')} dangerouslySetInnerHTML={{ __html: sectionDesc }} />
+          <div className={cx('section__desc', 'rt')} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(sectionDesc) }} />
         )}
       </div>
-      <div className="section__content col-1-span-14">
+      <div className={cx('section__content', 'col-1-span-14')}>
 
         {/* Main Slider */}
         <div ref={originalSliderRef} className={cx('slider', 'js-slider', { 'js-slider-principal': agent })}>

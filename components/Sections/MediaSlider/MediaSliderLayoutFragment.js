@@ -8,26 +8,25 @@ export const MediaSliderLayoutFragment = gql`
     sectionTitle
     hideSectionTitle
     slides {
-      ... on AdditionalSectionsSectionsSlidesImageLayout {
-        image {
+      ... on AdditionalSectionsSectionsSlidesEmbedLayout {
+        embedDesc
+        embedTitle
+        embedVideo
+        embedImage {
           node {
             altText
-            sizes(size: LARGE)
-            sourceUrl
-            srcSet
             caption
+            mediaItemUrl
           }
         }
       }
-      ... on AdditionalSectionsSectionsSlidesYoutubeEmbedLayout {
-        embedVideo
-        videoDesc
-        youtubeEmbedImage {
+      ... on AdditionalSectionsSectionsSlidesImageLayout {
+        fieldGroupName
+        image {
           node {
             altText
-            sizes(size: LARGE)
-            sourceUrl
-            srcSet
+            caption
+            mediaItemUrl
           }
         }
       }

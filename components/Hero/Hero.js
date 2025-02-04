@@ -3,7 +3,7 @@ import { gql, useQuery } from "@apollo/client";
 import classNames from "classnames/bind";
 import { Section } from "../../components";
 import styles from "./Hero.module.scss";
-import DOMPurify from 'dompurify';
+import DOMPurify from "isomorphic-dompurify";
 
 const cx = classNames.bind(styles);
 
@@ -37,7 +37,7 @@ export default function Hero({
           <h2 className={cx("hero__title")}>{title}</h2>
         )}
         {content && (
-          <div className={cx('section__desc', 'rt')} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize('test') }} />
+          <div className={cx('hero__desc', 'rt')} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize('test') }} />
         )}
       </div>
     </Section>
