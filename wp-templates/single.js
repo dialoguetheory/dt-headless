@@ -1,6 +1,11 @@
 import { gql } from '@apollo/client';
+import * as MENUS from '../constants/menus';
 import { useFaustQuery } from '@faustwp/core';
+import { SiteInfoFragment } from '../fragments/GeneralSettings';
+import { PageProvider } from '../context/PageContext';
+
 import {
+  SiteHead,
   Container,
   ContentWrapper,
   EntryHeader,
@@ -9,10 +14,7 @@ import {
   Header,
   Main,
   NavigationMenu,
-  SEO,
 } from '../components';
-import * as MENUS from '../constants/menus';
-import { SiteInfoFragment } from '../fragments/GeneralSettings';
 
 const GET_LAYOUT_QUERY = gql`
   ${SiteInfoFragment}
@@ -50,6 +52,11 @@ const GET_POST_QUERY = gql`
         }
       }
       ...FeaturedImageFragment
+      seo {
+        metaDesc
+        title
+        fullHead
+      }
     }
   }
 `;
@@ -67,15 +74,11 @@ export default function Component(props) {
   const { title: siteTitle, description: siteDescription } = generalSettings;
   const primaryMenu = headerMenuItems?.nodes ?? [];
   const footerMenu = footerMenuItems?.nodes ?? [];
-  const { title, content, featuredImage, date, author } = post ?? {};
+  const { title, content, featuredImage, date, author, seo, link } = post ?? {};
 
   return (
-    <>
-      <SEO
-        title={siteTitle}
-        description={siteDescription}
-        imageUrl={featuredImage?.node?.sourceUrl}
-      />
+    <PageProvider pageLink={link}>
+      <SiteHead fullHead={seo.fullHead} />
       <Header
         title={siteTitle}
         description={siteDescription}
@@ -95,7 +98,7 @@ export default function Component(props) {
         </>
       </Main>
       <Footer title={siteTitle} menuItems={footerMenu} />
-    </>
+    </PageProvider>
   );
 }
 

@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './Basic.module.scss';
-import { Section } from "../../../components";
-import DOMPurify from "isomorphic-dompurify";
+import { Section, SecureRichText } from "../../../components";
+import { commonSectionProps } from '../../../types/sectionProps';
 
 const cx = classNames.bind(styles);
 
 const BasicSection = ({
+  sectionLabel,
   sectionTitle,
   hideSectionTitle,
   sectionDesc,
@@ -14,8 +15,8 @@ const BasicSection = ({
   index,
   dataFromPrevious, 
   onDataPass,
+  anchorDest
 }) => {
-
   if (!sectionTitle && !sectionDesc) return null;
 
   const hideHeader = !sectionTitle || (hideSectionTitle && !sectionDesc);
@@ -26,7 +27,7 @@ const BasicSection = ({
   }
 
   return (
-    <Section props={props} dataFromPrevious={dataFromPrevious} onDataPass={onDataPass}>
+    <Section anchorDest={anchorDest} props={props} dataFromPrevious={dataFromPrevious} onDataPass={onDataPass}>
       <div className={cx('section__header', 'flex-dir-col', 'col-2-span-12', {
         'visually-hidden': hideHeader,
         })}
@@ -36,8 +37,11 @@ const BasicSection = ({
             {sectionTitle}
           </h2>
         )}
+        {sectionLabel && (
+          <p className={cx('section__label', 'visually-first')}>{sectionLabel}</p>
+        )}
         {sectionDesc && (
-          <div className={cx('section__desc', 'rt')} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(sectionDesc) }} />
+          <SecureRichText content={sectionDesc} className={cx('section__desc', 'rt')} />
         )}
       </div>
     </Section>
@@ -45,13 +49,11 @@ const BasicSection = ({
 };
 
 BasicSection.propTypes = {
+  ...commonSectionProps,
   sectionTitle: PropTypes.string,
+  sectionLabel: PropTypes.string,
   hideSectionTitle: PropTypes.bool,
-  sectionDesc: PropTypes.string,
-  sectionClasses: PropTypes.string,
-  index: PropTypes.number.isRequired,
-  dataFromPrevious: PropTypes.object,
-  onDataPass: PropTypes.func,
+  sectionDesc: PropTypes.string
 };
 
 export default BasicSection;

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { ScrollHelpers } from "../../components";
 import classNames from 'classnames';
 import * as BREAKPOINTS from '../../constants/breakpoints';
 
-const Section = ({ props = {}, children, dataFromPrevious, onDataPass }) => {
+
+const Section = ({ props = {}, anchorDest, children, dataFromPrevious, onDataPass }) => {
 
     // Default settings with sensible fallbacks
     const defaultSettings = {
@@ -44,8 +44,6 @@ const Section = ({ props = {}, children, dataFromPrevious, onDataPass }) => {
 
     // Merge defaultSettings with provided data
     let settings = { ...defaultSettings, ...props };
-
-    console.log(settings);
 
     // Update classes
     settings.classes = classNames(settings.classes, 'col-1-span-14', 'grid', 'grid--full', 'section');
@@ -91,7 +89,6 @@ const Section = ({ props = {}, children, dataFromPrevious, onDataPass }) => {
             }
         }
 
-        // Dynamically compute classes
         const computedClasses = classNames({
             [settings.classes]: !!settings.classes, // Include base classes if any
             [settings.bgColor]: true, // Always add the current bgColor
@@ -105,9 +102,15 @@ const Section = ({ props = {}, children, dataFromPrevious, onDataPass }) => {
         }));
     }, [settings.classes, settings.bgColor, dataFromPrevious, onDataPass, currentData]);
 
+    const anchorSlug = anchorDest?.nodes[0]?.anchorCustomFields?.anchorSlug;
+
     return (
         <section className={sectionProps.classes} data-element="section">
-            <ScrollHelpers id={settings.id} />
+            {anchorSlug &&
+                <div className={"anchor-dest"} style={{position: "relative"}} data-id={anchorSlug} data-name={anchorSlug}></div>
+            }
+            <div className="section-scroll-top" id={settings.id}></div>
+            <div className="js-section-scroll-trigger section-scroll-trigger"></div>
             {children}
         </section>
     );

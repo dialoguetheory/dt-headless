@@ -9,7 +9,12 @@ export const AccordionLayoutFragment = gql`
     sectionDesc
     anchorDest {
       nodes {
-        databaseId
+        ... on Anchor {
+          anchorCustomFields {
+            fieldGroupName
+            anchorSlug
+          }
+        }
       }
     }
     items {

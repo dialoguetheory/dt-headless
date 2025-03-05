@@ -3,7 +3,7 @@ import Link from "next/link";
 import Head from "next/head";
 import Header from "../components/header";
 import EntryHeader from "../components/entry-header";
-import Footer from "../components/footer";
+import Footer from "../components/Footer";
 
 export default function Component(props) {
   const { title: siteTitle, description: siteDescription } =

@@ -1,6 +1,7 @@
 import className from 'classnames/bind';
 import { Heading, PostInfo, Container, FeaturedImage } from '../../components';
 import styles from './EntryHeader.module.scss';
+import { gql } from '@apollo/client';
 
 let cx = className.bind(styles);
 
@@ -32,3 +33,18 @@ export default function EntryHeader({ title, image, date, author, className }) {
     </div>
   );
 }
+export const GET_ANCHOR = gql`
+  query GetAnchor($slug: ID!) {
+    anchor(id: $slug, idType: SLUG) {
+      anchorCustomFields {
+        anchorSlug
+        anchorPage {
+          nodes {
+            link
+            uri
+          }
+        }
+      }
+    }
+  }
+`;

@@ -8,15 +8,33 @@ export const MediaSliderLayoutFragment = gql`
     sectionTitle
     hideSectionTitle
     slides {
-      ... on AdditionalSectionsSectionsSlidesEmbedLayout {
-        embedDesc
-        embedTitle
-        embedVideo
-        embedImage {
+      ... on AdditionalSectionsSectionsSlidesVideoLayout {
+        caption
+        videoUrl
+        fieldGroupName
+        image {
           node {
             altText
             caption
             mediaItemUrl
+            sourceUrl
+            sizes
+            srcSet
+          }
+        }
+      }
+      ... on AdditionalSectionsSectionsSlidesEmbedLayout {
+        caption
+        embed
+        fieldGroupName
+        image {
+          node {
+            altText
+            caption
+            mediaItemUrl
+            sourceUrl
+            sizes
+            srcSet
           }
         }
       }
@@ -26,28 +44,32 @@ export const MediaSliderLayoutFragment = gql`
           node {
             altText
             caption
+            srcSet
+            sourceUrl
             mediaItemUrl
+            sizes
           }
         }
       }
     }
     anchorDest {
       nodes {
-        databaseId
+        ... on Anchor {
+          anchorCustomFields {
+            fieldGroupName
+            anchorSlug
+          }
+        }
       }
     }
+    autoPlay
     adaptiveHeight
     captions
     cellAlign
-    counter
-    pageDots
-    pauseOnHover
-    previousNextButtons
-    progressBar
+    dots
+    buttons
     speed
-    setGallerySize
     thumbs
-    timer
     transition
     wrapAround
   }

@@ -6,9 +6,15 @@ export const BasicLayoutFragment = gql`
     hideSectionTitle
     sectionDesc
     sectionTitle
+    sectionLabel
     anchorDest {
       nodes {
-        databaseId
+        ... on Anchor {
+          anchorCustomFields {
+            fieldGroupName
+            anchorSlug
+          }
+        }
       }
     }
   }

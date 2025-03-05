@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import className from 'classnames/bind';
-import { Section } from "../../../components";
+import { Section, SecureRichText } from "../../../components";
 import styles from './Accordion.module.scss';
-import DOMPurify from "isomorphic-dompurify";
+import { commonSectionProps } from '../../../types/sectionProps';
 
 import {
   handleItem,
@@ -21,9 +21,9 @@ const AccordionSection = ({
   index,
   dataFromPrevious, 
   onDataPass,
+  anchorDest
 }) => {
-
-  if (!sectionTitle && !sectionDesc) return null;
+  if (!sectionTitle && !items) return null;
 
   const hideHeader = !sectionTitle || (hideSectionTitle && !sectionDesc);
 
@@ -33,7 +33,7 @@ const AccordionSection = ({
   }
 
   return (
-    <Section props={props} dataFromPrevious={dataFromPrevious} onDataPass={onDataPass}>
+    <Section anchorDest={anchorDest} props={props} dataFromPrevious={dataFromPrevious} onDataPass={onDataPass}>
       <div className={cx('section__header', 'flex-dir-col', 'col-2-span-12', {
         'visually-hidden': hideHeader,
         })}
@@ -44,7 +44,7 @@ const AccordionSection = ({
           </h2>
         )}
         {sectionDesc && (
-            <div className={cx('section__desc', 'rt')} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(sectionDesc) }} />
+            <SecureRichText content={sectionDesc} className={cx('section__desc', 'rt')} />
         )}
       </div>
       <div className={cx('section__content', 'col-2-span-12', 'col-3-span-9@md')}>
@@ -60,7 +60,7 @@ const AccordionSection = ({
               </summary>
               <div className={cx('content')} data-accordion="content">
                 {itemContent && (
-                  <div className={cx('rt')} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(itemContent) }} />
+                  <SecureRichText content={itemContent} className={cx('rt')} />
                 )}
               </div>
             </details>
@@ -72,13 +72,10 @@ const AccordionSection = ({
 };
 
 AccordionSection.propTypes = {
+  ...commonSectionProps,
   sectionTitle: PropTypes.string,
   hideSectionTitle: PropTypes.bool,
   sectionDesc: PropTypes.string,
-  sectionClasses: PropTypes.string,
-  index: PropTypes.number.isRequired,
-  dataFromPrevious: PropTypes.object,
-  onDataPass: PropTypes.func,
 };
 
 export default AccordionSection;

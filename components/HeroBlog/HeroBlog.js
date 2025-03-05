@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames/bind";
-import { Section, BackgroundImage, BackgroundVideo } from "../../components";
+import { Section, BackgroundImage, BackgroundVideo } from "..";
 import styles from "./Hero.module.scss";
 import DOMPurify from "isomorphic-dompurify";
 

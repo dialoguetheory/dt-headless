@@ -1,17 +1,13 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import useEmblaCarousel from 'embla-carousel-react';
 import PropTypes from 'prop-types';
-import { Section } from "../../../components";
-import DOMPurify from "isomorphic-dompurify"
-import className from 'classnames/bind';
+import { Section, VideoLightbox, SecureRichText } from '../../../components';
+import classNames from 'classnames/bind';
 import styles from './MediaSlider.module.scss';
-import CustomButtons from './CustomButtons';
-import CustomPageDots from './CustomPageDots';
-import SliderCounter from './SliderCounter';
-import ProgressBar from './ProgressBar';
-import TimerBar from './TimerBar';
-import 'flickity/dist/flickity.min.css';
+import { NextButton, PrevButton, usePrevNextButtons } from './buttons';
+import { DotButton, useDotButton } from './dots';
+import { commonSectionProps } from '../../../types/sectionProps';
 
-let cx = className.bind(styles || {});
+const cx = classNames.bind(styles || {});
 
 const MediaSliderSection = ({
   index,
@@ -20,92 +16,33 @@ const MediaSliderSection = ({
   sectionDesc,
   sectionClasses,
   slides = [],
-  adaptiveHeight = false,
-  captions = false,
-  cellAlign = 'center',
-  wrapAround = false,
-  speed = false,
-  setGallerySize = true,
-  thumbs = false,
-  previousNextButtons = [],
-  pageDots = [],
-  timer = [],
-  counter = false,
-  progressBar = false,
-  pauseOnHover = true,
+  autoPlay,
+  adaptiveHeight,
+  captions,
+  wrapAround,
+  speed = 4000,
+  thumbs,
+  buttons,
+  dots,
   dataFromPrevious, 
   onDataPass,
+  anchorDest
 }) => {
-  const originalSliderRef = useRef(null);
-  const originalInstanceRef = useRef(null);
-  const thumbnailSliderRef = useRef(null);
-  const [sliderState, setSliderState] = useState('default');
+  if (!slides.length && !sectionTitle && !sectionDesc) return null;
 
-  const initializeCarousel = useCallback(() => {
-    const Flickity = require('flickity');
-    if (originalInstanceRef.current) originalInstanceRef.current.destroy();
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    speed,
+    draggable: true,
+    containScroll: 'trimSnaps',
+  });
 
-    const options = {
-      cellAlign,
-      wrapAround,
-      autoPlay: speed,
-      adaptiveHeight,
-      setGallerySize,
-      prevNextButtons: previousNextButtons.includes('true'),
-      pageDots: pageDots.includes('true'),
-      pauseAutoPlayOnHover: pauseOnHover,
-    };
+  // console.log(emblaApi);
 
-    originalInstanceRef.current = new Flickity(originalSliderRef.current, options);
-    setSliderState(originalInstanceRef.current.player?.state || 'default');
+  const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(emblaApi);
+  const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } = usePrevNextButtons(emblaApi);
 
-    originalInstanceRef.current.on('change', () => {
-      setSliderState(originalInstanceRef.current.player?.state || 'default');
-    });
-
-    if (pauseOnHover) {
-      const handleHover = (state) => () => setSliderState(state);
-
-      const sliderElement = originalSliderRef.current;
-      sliderElement.addEventListener('mouseenter', handleHover('paused'));
-      sliderElement.addEventListener('mouseleave', handleHover(originalInstanceRef.current.player?.state || 'default'));
-
-      return () => {
-        sliderElement.removeEventListener('mouseenter', handleHover('paused'));
-        sliderElement.removeEventListener('mouseleave', handleHover('default'));
-      };
-    }
-  }, [cellAlign, wrapAround, speed, adaptiveHeight, setGallerySize, previousNextButtons, pageDots, pauseOnHover]);
-
-  const initializeThumbnails = useCallback(() => {
-    if (!thumbs) return;
-
-    const Flickity = require('flickity');
-    if (thumbnailSliderRef.current) {
-      new Flickity(thumbnailSliderRef.current, {
-        asNavFor: originalSliderRef.current,
-        contain: true,
-        pageDots: false,
-        cellAlign: 'left',
-      });
-    }
-  }, [thumbs]);
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !slides.length) return;
-
-    const cleanupCarousel = initializeCarousel();
-    initializeThumbnails();
-
-    return () => {
-      cleanupCarousel?.();
-      originalInstanceRef.current?.destroy();
-    };
-  }, [initializeCarousel, initializeThumbnails, slides]);
-
-  if (!sectionTitle && !sectionDesc && !slides.length) return null;
-
-  const hideHeader = !sectionTitle || (hideSectionTitle && !sectionDesc) ? 'visually-hidden' : '';
+  const hideHeader = !sectionTitle || (hideSectionTitle && !sectionDesc);
 
   const props = {
     id: index,
@@ -113,126 +50,118 @@ const MediaSliderSection = ({
   }
 
   return (
-
-    <Section props={props} dataFromPrevious={dataFromPrevious} onDataPass={onDataPass} data-slider={"wrapper"}>
-      <div className={cx('section__header', 'col-2-span-12', 'flex-dir-col', hideHeader)}>
-        {sectionTitle && (
-          <h2 className={cx('section__title', 'h2', { 'visually-hidden': hideSectionTitle })}>
-            {sectionTitle}
-          </h2>
-        )}
-        {sectionDesc && (
-          <div className={cx('section__desc', 'rt')} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(sectionDesc) }} />
-        )}
+    <Section anchorDest={anchorDest} props={props} dataFromPrevious={dataFromPrevious} onDataPass={onDataPass}>
+      <div className={cx('section__header', 'flex-dir-col', 'col-2-span-12', {
+        'visually-hidden': hideHeader,
+      })}>
+        {sectionTitle && <h2 className={cx('h2', { 'visually-hidden': hideSectionTitle })}>{sectionTitle}</h2>}
+        {sectionDesc && <SecureRichText content={sectionDesc} className={cx('section__desc', 'rt')} />}
       </div>
 
       {slides.length > 0 && (
-        <div className={cx('section__content', 'col-1-span-14')} data-state={sliderState}>
-          <div ref={originalSliderRef} className={cx('slider', 'js-slider', { 'js-slider-principal': thumbs })} data-slider={"principal"}>
-            {slides.map((slide, idx) => (
-              <div key={`original-${idx}`} className={cx('slider-cell')}>
-                <figure>
-                  <img
-                    src={slide.image.node.sourceUrl}
-                    alt={slide.image.node.altText}
-                    sizes={slide.image.node.sizes}
-                    srcSet={slide.image.node.srcSet}
-                  />
-                  {captions && slide.image.node.caption && (
-                    <figcaption>{slide.image.node.caption}</figcaption>
-                  )}
-                </figure>
+        <div className={cx('section__content', 'col-2-span-12')}>
+          <div className={cx("embla")}>
+            <div className={cx("embla__viewport")} ref={emblaRef}>
+              <div className={cx("embla__container")}>
+                {slides.map((slide, idx) => (
+                  <div className={cx("embla__slide")} key={idx}>
+                    {slide.fieldGroupName === "AdditionalSectionsSectionsSlidesImageLayout" && <ImageSlide slide={slide} captions={captions} />}
+                    {slide.fieldGroupName === "AdditionalSectionsSectionsSlidesVideoLayout" && <VideoSlide slide={slide} captions={captions} />}
+                    {slide.fieldGroupName === "AdditionalSectionsSectionsSlidesEmbedLayout" && <EmbedSlide slide={slide} captions={captions} />}
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
 
-          {previousNextButtons.includes('custom') && (
-            <CustomButtons
-              onNext={() => originalInstanceRef.current.next()}
-              onPrev={() => originalInstanceRef.current.previous()}
-            />
-          )}
-
-          {pageDots.includes('custom') && (
-            <CustomPageDots
-              carousel={originalInstanceRef.current}
-              totalSlides={slides.length}
-              customClass=""
-            />
-          )}
-
-          {counter && <SliderCounter carousel={originalInstanceRef.current} totalSlides={slides.length} />}
-          {progressBar && <ProgressBar carousel={originalInstanceRef.current} totalSlides={slides.length} />}
-          {timer && timer.includes('single') && (
-            <TimerBar carousel={originalInstanceRef.current} autoPlayDuration={speed} />
-          )}
-
-          {thumbs && (
-            <div ref={thumbnailSliderRef} className={cx('slider', 'js-slider', 'js-slider-thumbnails')} data-slider={"thumbnails"}>
-              {slides.map((slide, idx) => (
-                <div key={`thumbnail-${idx}`} className={cx('slider-cell')}>
-                  <img
-                    src={slide.image.node.sourceUrl}
-                    alt={slide.image.node.altText}
-                    sizes={slide.image.node.sizes}
-                    srcSet={slide.image.node.srcSet}
+          <div className={cx("embla__controls")}>
+            {buttons &&
+              <div className={cx("embla__buttons")}>
+                <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
+                <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
+              </div>
+            }
+            {dots &&
+              <div className={cx("embla__dots")}>
+                {scrollSnaps.map((_, index) => (
+                  <DotButton
+                    key={index}
+                    onClick={() => onDotButtonClick(index)}
+                    className={cx('embla__dot', {
+                      'embla__dot--selected': index === selectedIndex,
+                    })}
                   />
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            }
+          </div>
         </div>
       )}
     </Section>
   );
 };
 
+const ImageSlide = ({ slide, captions }) => (
+  <div className={cx('image')}>
+    <figure>
+      <img src={slide.image.node.sourceUrl} alt={slide.image.node.altText} sizes={slide.image.node.sizes} srcSet={slide.image.node.srcSet} />
+      {captions && slide.image.node.caption && <SecureRichText content={slide.image.node.caption} as="figcaption" /> }
+    </figure>
+  </div>
+);
+
+const VideoSlide = ({ slide, captions }) => (
+  <div className={cx('video')}>
+    <figure>
+      <img src={slide.image.node.sourceUrl} alt={slide.image.node.altText} sizes={slide.image.node.sizes} srcSet={slide.image.node.srcSet} />
+      {captions && slide.caption && <SecureRichText content={slide.caption} as="figcaption" /> }
+    </figure>
+    <VideoLightbox videoUrl={slide.videoUrl} />
+  </div>
+);
+
+const EmbedSlide = ({ slide, captions }) => (
+  <div className={cx('embed')}>
+    <figure>
+      <img src={slide.image.node.sourceUrl} alt={slide.image.node.altText} sizes={slide.image.node.sizes} srcSet={slide.image.node.srcSet} />
+      {captions && slide.caption && <SecureRichText content={slide.caption} as="figcaption" /> }
+    </figure>
+    <VideoLightbox embed={slide.embed} />
+  </div>
+);
+
+
 MediaSliderSection.propTypes = {
-  index: PropTypes.number.isRequired,
-  dataFromPrevious: PropTypes.object,
-  onDataPass: PropTypes.func,
+  ...commonSectionProps,
   sectionTitle: PropTypes.string,
   hideSectionTitle: PropTypes.bool,
   sectionDesc: PropTypes.string,
-  sectionClasses: PropTypes.string,
   slides: PropTypes.arrayOf(
     PropTypes.shape({
-      embedVideo: PropTypes.string,
-      videoDesc: PropTypes.string,
-      youtubeEmbedImage: PropTypes.shape({
-        node: PropTypes.shape({
-          altText: PropTypes.string,
-          sourceUrl: PropTypes.string,
-          sizes: PropTypes.string,
-          srcSet: PropTypes.string,
-        }),
-      }),
+      videoUrl: PropTypes.string,
+      embed: PropTypes.string,
+      caption: PropTypes.string,
       image: PropTypes.shape({
         node: PropTypes.shape({
           altText: PropTypes.string,
-          sizes: PropTypes.string,
-          sourceUrl: PropTypes.string,
-          srcSet: PropTypes.string,
           caption: PropTypes.string,
+          sourceUrl: PropTypes.string,
+          mediaItemUrl: PropTypes.string,
+          sizes: PropTypes.string,
+          srcSet: PropTypes.string,
         }),
       }),
     })
   ),
-  cellAlign: PropTypes.arrayOf(PropTypes.oneOf(['left', 'center', 'right'])),
-  previousNextButtons: PropTypes.arrayOf(PropTypes.oneOf(['false', 'true', 'custom'])),
-  pageDots: PropTypes.arrayOf(PropTypes.oneOf(['false', 'true', 'custom'])),
+  autoPlay: PropTypes.bool,
+  cellAlign: PropTypes.string,
+  buttons: PropTypes.bool,
+  dots: PropTypes.bool,
   wrapAround: PropTypes.bool,
   speed: PropTypes.number,
   adaptiveHeight: PropTypes.bool,
   thumbs: PropTypes.bool,
-  setGallerySize: PropTypes.bool,
-  captions: PropTypes.bool,
-  counter: PropTypes.bool,
-  pauseOnHover: PropTypes.bool,
-  progressBar: PropTypes.bool,
-  timer: PropTypes.arrayOf(PropTypes.oneOf(['single', 'all'])),
-  dataFromPrevious: PropTypes.object,
-  onDataPass: PropTypes.func,
+  captions: PropTypes.bool
 };
 
 export default MediaSliderSection;

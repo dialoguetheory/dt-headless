@@ -1,0 +1,68 @@
+/* Lightbox.module.scss */
+.dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 90%;
+    height: 90%;
+    max-width: 800px;
+    max-height: 600px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    display: none;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .dialog[open] {
+    display: block;
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .dialogContent {
+    position: relative;
+    height: 100%;
+  }
+  
+  .openBtn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .closeBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 18px;
+  }
+  
+  .video {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+  }
+  
+  .openBtn:hover {
+    background-color: #0056b3;
+  }
+  
+  .closeBtn:hover {
+    background-color: rgba(255, 255, 255, 1);
+  }
+  

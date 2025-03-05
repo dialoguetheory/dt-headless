@@ -1,24 +1,19 @@
 import classNames from 'classnames/bind';
 import styles from "./Background.module.scss";
-import Image from 'next/image';
 
 const cx = classNames.bind(styles);
 
-export default function BackgroundImage({
-  img,
+export default function BackgroundVideo({
+  video,
   wrapClasses
 }) {
-  if (!img) return null;
+  if (!video) return null;
 
   const {
-    sourceUrl,
-    altText = "Background image",
-    mediaDetails = {},
-    sizes,
+    mediaItemUrl,
     imagesTextLegibilityOptions = {}
-  } = img;
+  } = video;
 
-  const { width, height } = mediaDetails;
   const { bgTint, bgTintColor } = imagesTextLegibilityOptions;
   const bgTintOpacity = Math.abs(bgTint) / 10;
 
@@ -26,14 +21,15 @@ export default function BackgroundImage({
 
   return (
     <div className={cx('bg-wrap', wrapClasses)}>
-      <Image
-        src={sourceUrl}
-        alt={altText}
-        width={width}
-        height={height}
-        className="bg bg--cover"
-        priority
-        sizes={sizes}
+      <video
+        src={mediaItemUrl}
+        preload={"auto"}
+        muted
+        loop
+        autoPlay
+        playsInline
+        loading={"lazy"}
+        aria-hidden={"true"}
       />
       {renderTint && (
         <div

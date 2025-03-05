@@ -5,7 +5,6 @@ import { SectionsFragment } from '../components/Sections/SectionsFragment';
 import { NavigationMenuItemFragment } from '../fragments/NavigationItems';
 import classNames from 'classnames/bind';
 import styles from "../styles/modules/Page.module.scss";
-import { PageProvider } from '../context/PageContext';
 
 import {
   SiteHead,
@@ -29,10 +28,10 @@ export default function Component(props) {
   const primaryMenu = props?.data?.headerMenuItems?.nodes ?? [];
   const footerMenu = props?.data?.footerMenuItems?.nodes ?? [];
   const sections = props?.data?.page?.additionalSections?.sections || [];
-  const pageLink = props?.data?.page?.link;
+
 
   return (
-    <PageProvider pageLink={pageLink}>
+    <>
       <SiteHead fullHead={props?.data?.page?.seo?.fullHead} />
       <Header
         title={siteTitle}
@@ -41,12 +40,11 @@ export default function Component(props) {
       />
       <Main className={`${cx('main')} grid grid--full light-area"`} role={'main'}>
         <Hero page={props?.data?.page} />
-        <AdditionalSections sections={sections} />
       </Main>
       <SiteFooter 
         footerMenu={footerMenu} 
       />
-    </PageProvider>
+    </>
   );
 }
 

@@ -5,72 +5,89 @@ import { SectionsFragment } from '../components/Sections/SectionsFragment';
 import { NavigationMenuItemFragment } from '../fragments/NavigationItems';
 import className from 'classnames/bind';
 import styles from "../styles/modules/Front-page.module.scss";
+import { CardPost } from '../components';
+import { PageProvider } from '../context/PageContext';
 
 import {
   SiteHead,
   Header,
-  Footer,
+  SiteFooter,
   Main,
   Hero,
   FeaturedImage,
   AdditionalSections
 } from '../components';
 
-let cx = className.bind(styles);
+const cx = className.bind(styles);
 
-export default function Component(props) {
-
-  if (process.env.NODE_ENV === 'development') {
-    if (props.loading) return <p>Loading...</p>;
-  }
-
-  const { title: siteTitle, description: siteDescription } =
-    props.data.generalSettings;
-  const primaryMenu = props?.data?.headerMenuItems?.nodes ?? [];
-  const footerMenu = props?.data?.footerMenuItems?.nodes ?? [];
-  const sections = props?.data?.page?.additionalSections?.sections || [];
-  const { 
-    title, 
-    featuredImage, 
-    databaseId, 
-    link,
-    seo,
-  } = props?.data?.page ?? {
-    title: '',
-  };
-
-  // Have to set this here because Yoast fullHead doesn't seem to recognize front page. 
-  let fullHead = seo?.fullHead || '';
-  if (fullHead) {
-    fullHead = fullHead.replace(
-      /<meta\s+property="og:type"\s+content="[^"]*"\s*\/?>/i, 
-      `<meta property="og:type" content="website" />`
+const MainContent = ({ page, sections, posts }) => {
+  if (page) {
+    const sections = page.additionalSections?.sections || [];
+    return (
+      <>
+        <Hero page={page} />
+        <AdditionalSections sections={sections} />
+      </>
     );
   }
 
   return (
-    <>
-      <SiteHead fullHead={fullHead} />
+    <div className={cx('posts-grid')}>
+      {posts.length > 0 ? (
+        posts.map((post) => <CardPost key={post.id} post={post} />)
+      ) : (
+        <p>No posts found.</p>
+      )}
+    </div>
+  );
+};
+
+export default function Component(props) {
+  if (process.env.NODE_ENV === 'development') {
+    if (props.loading) return <p>Loading...</p>;
+  }
+
+  const { title: siteTitle, description: siteDescription } = props.data.generalSettings;
+  const primaryMenu = props?.data?.headerMenuItems?.nodes ?? [];
+  const footerMenu = props?.data?.footerMenuItems?.nodes ?? [];
+  const posts = props?.data?.posts?.nodes ?? [];
+  const { 
+    title, 
+    featuredImage, 
+    databaseId, 
+    seo,
+    link
+  } = props?.data?.page ?? {
+    title: '',
+    link: ''
+  };
+
+  return (
+    <PageProvider pageLink={link}>
+      <SiteHead fullHead={seo?.fullHead} frontPage={true} />
       <Header
         title={siteTitle}
         description={siteDescription}
         menuItems={primaryMenu}
       />
       <Main className={`${cx('main')} grid grid--full light-area"`} role={'main'}>
-        <Hero databaseId={databaseId} title={title} featuredImage={featuredImage} />
-        <AdditionalSections sections={sections} />
+        <MainContent databaseId={databaseId} title={title} featuredImage={featuredImage} page={props?.data?.page} posts={posts} />
       </Main>
-      <Footer title={siteTitle} menuItems={footerMenu} />
-    </>
+      <SiteFooter 
+        footerMenu={footerMenu} 
+      />
+    </PageProvider>
   );
 }
 
 Component.variables = ({ databaseId }, ctx) => {
+  const id = databaseId || "0";
   return {
-    databaseId,
+    databaseId: id,
     headerLocation: MENUS.PRIMARY_LOCATION,
     footerLocation: MENUS.FOOTER_LOCATION,
     asPreview: ctx?.asPreview,
+    isDefaultId: id === "0" 
   };
 };
 
@@ -80,10 +97,11 @@ Component.query = gql`
   ${FeaturedImage.fragments.entry}
   ${SectionsFragment}
   query GetPageData(
-    $databaseId: ID!
+    $databaseId: ID! = "0"
     $headerLocation: MenuLocationEnum
     $footerLocation: MenuLocationEnum
-    $asPreview: Boolean = false
+    $asPreview: Boolean = false,
+    $isDefaultId: Boolean = false
   ) {
     page(id: $databaseId, idType: DATABASE_ID, asPreview: $asPreview) {
       databaseId
@@ -96,6 +114,14 @@ Component.query = gql`
         metaDesc
         title
         fullHead
+      }
+    }
+    posts @include(if: $isDefaultId) {
+      nodes {
+        id
+        title
+        excerpt
+        ...FeaturedImageFragment
       }
     }
     generalSettings {

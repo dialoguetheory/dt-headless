@@ -5,7 +5,6 @@ const activeSectionComponents = {
   Basic: React.lazy(() => import('./Basic/Basic')),
   Accordion: React.lazy(() => import('./Accordion/Accordion')),
   MediaSlider: React.lazy(() => import('./MediaSlider/MediaSlider')),
-  TestimonialSlider: React.lazy(() => import('./TestimonialSlider/TestimonialSlider')),
 };
 
 // Is this section allowed and is there a corresponding component
