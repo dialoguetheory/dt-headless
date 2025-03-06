@@ -1,55 +1,109 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const AnchorLinks = () => {
-  useEffect(() => {
-    const anchorLinks = document.querySelectorAll("a[data-anchor]");
-    const anchorDests = document.querySelectorAll(".anchor-dest");
+  const anchorLinksRef = useRef([]);
 
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  useEffect(() => {
+    console.log("AnchorLinks mounted - Effect starting");
 
     function getHeaderOffset() {
       const style = getComputedStyle(document.body);
       let headerOffset = style.getPropertyValue("--header-offset");
-      return headerOffset ? parseInt(headerOffset.replace(/\D/g, ""), 10) : 0;
+      return headerOffset ? parseInt(headerOffset.replace(/\D/g, ""), 10) : 80;
     }
 
-    function jumpToAnchor(hashSlug) {
-      const target = document.querySelector(`[data-id='${hashSlug}'], #${hashSlug}`);
-      if (!target) return console.warn(`Anchor destination ${hashSlug} does not exist on this page.`);
-
-      const headerOffset = getHeaderOffset();
-      const targetPosition = target.getBoundingClientRect().top;
-
-      console.log(headerOffset);
-      console.log(target.getBoundingClientRect().top);
-      console.log(window.scrollY);
-      console.log(targetPosition);
-
-      if (prefersReducedMotion) {
-        window.scrollTo(0, targetPosition);
-      } else {
-        window.scrollTo({
-          top: targetPosition,
-          behavior: "smooth",
-        });
+    async function jumpToAnchor(hashSlug) {
+      console.log('jumpToAnchor called with:', hashSlug);
+      
+      if (!hashSlug) {
+        console.warn('No hash provided to jumpToAnchor');
+        return;
       }
+
+      // Wait for next frame to ensure DOM is ready
+      await new Promise(resolve => requestAnimationFrame(resolve));
+
+      // Clean the hashSlug to ensure it's just the ID
+      const cleanHash = hashSlug.split('#').pop();
+      console.log('Clean hash:', cleanHash);
+
+      const target = document.querySelector(`[data-id='${cleanHash}'], #${cleanHash}`);
+      console.log('Found target:', target);
+      
+      if (!target) {
+        console.warn(`Anchor destination ${cleanHash} does not exist on this page.`);
+        return;
+      }
+
+      // Calculate header offset first
+      const headerOffset = getHeaderOffset();
+      console.log('Header offset:', headerOffset);
+
+      // Get the target's position
+      const rect = target.getBoundingClientRect();
+      const absoluteTop = rect.top + window.pageYOffset;
+      const targetPosition = absoluteTop - headerOffset;
+
+      // Smooth scroll to target position
+      console.log('Smooth scrolling to position:', targetPosition);
+      window.scrollTo({
+        top: targetPosition,
+        behavior: "smooth"
+      });
+
+      // Wait for scroll to complete
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       target.setAttribute("tabindex", "-1");
       target.focus();
+      
+      console.log('Scroll complete');
     }
 
     function handleAnchorClick(event) {
-      const link = event.currentTarget;
-      const hashSlug = new URL(link.href).hash.substring(1);
-      if (!hashSlug) return;
+      // Use event delegation to check if clicked element is an anchor
+      const link = event.target.closest('a[data-anchor], a[data-local="true"][data-anchor="true"]');
+      if (!link) return;
 
-      if (window.location.pathname === link.pathname) {
+      console.log('Anchor clicked:', link);
+      
+      // Handle both regular anchor links and local anchor links
+      let hashSlug;
+      
+      if (link.dataset.local === 'true' && link.dataset.anchor === 'true') {
+        // For local anchors, get just the hash part or the href itself
+        const href = link.getAttribute('href');
+        hashSlug = href.includes('#') ? href.split('#').pop() : href;
+        console.log('Local anchor link clicked, processed href:', hashSlug);
+      } else {
+        // For regular anchors, extract from URL
+        try {
+          hashSlug = new URL(link.href).hash.substring(1);
+          console.log('Regular anchor link clicked, hash:', hashSlug);
+        } catch (e) {
+          console.warn('Invalid URL:', link.href);
+          return;
+        }
+      }
+      
+      if (!hashSlug) {
+        console.log('No hash/href found in link');
+        return;
+      }
+
+      // Remove leading # if present
+      hashSlug = hashSlug.replace(/^#/, '');
+
+      if (window.location.pathname === link.pathname || link.dataset.local === 'true') {
         event.preventDefault();
+        console.log('Handling anchor click for:', hashSlug);
         jumpToAnchor(hashSlug);
       }
     }
 
     function setupAnchorDestinations() {
+      console.log('Setting up anchor destinations');
+      const anchorDests = document.querySelectorAll(".anchor-dest");
       anchorDests.forEach(dest => {
         if (!dest.dataset.anchorParsed) {
           const anchorID = dest.id;
@@ -58,73 +112,63 @@ const AnchorLinks = () => {
             dest.removeAttribute("id");
             dest.setAttribute("tabindex", "-1");
             dest.dataset.anchorParsed = true;
+            console.log('Processed anchor destination:', anchorID);
           }
         }
       });
     }
 
-    // Add scroll position watcher
-    let currentTarget = null;
-    const handleScroll = () => {
-      if (currentTarget) {
-        const rect = currentTarget.getBoundingClientRect();
-        console.log('Target position on scroll:', {
-          top: rect.top,
-          bottom: rect.bottom,
-          height: rect.height,
-          scrollY: window.scrollY,
-          viewportHeight: window.innerHeight
-        });
-      }
-    };
+    function initializeAnchors() {
+      console.log('Initializing anchors');
+      // Add single click handler to document body using event delegation
+      document.body.addEventListener("click", handleAnchorClick);
+      setupAnchorDestinations();
+    }
 
-    // Update currentTarget when clicking an anchor
-    const originalHandleAnchorClick = handleAnchorClick;
-    handleAnchorClick = (event) => {
-      const link = event.currentTarget;
-      const hashSlug = new URL(link.href).hash.substring(1);
-      if (!hashSlug) return;
-
-      if (window.location.pathname === link.pathname) {
-        event.preventDefault();
-        currentTarget = document.querySelector(`[data-id='${hashSlug}'], #${hashSlug}`);
-        jumpToAnchor(hashSlug);
-      }
-    };
-
-    anchorLinks.forEach(link => link.addEventListener("click", handleAnchorClick));
-    window.addEventListener('scroll', handleScroll);
-    setupAnchorDestinations();
-
-    // Handle page load with hash in URL
+    // Handle initial hash if present
     if (window.location.hash) {
-      setTimeout(() => {
-        const hashSlug = window.location.hash.substring(1);
-        currentTarget = document.querySelector(`[data-id='${hashSlug}'], #${hashSlug}`);
-        jumpToAnchor(hashSlug);
-      }, 1500);
+      const hashSlug = window.location.hash.substring(1);
+      if (hashSlug) {
+        console.log('Initial hash detected:', hashSlug);
+        
+        const handleInitialHash = () => {
+          console.log('Handling initial hash');
+          setTimeout(() => {
+            jumpToAnchor(hashSlug);
+          }, 100);
+        };
+
+        if (document.readyState === 'complete') {
+          console.log('Document already complete, jumping immediately');
+          handleInitialHash();
+        } else {
+          console.log('Waiting for load event');
+          window.addEventListener('load', handleInitialHash, { once: true });
+        }
+      }
     }
 
-    const handleLoad = () => {
-      console.log("AnchorLinks mounted - page fully loaded");
-    };
-
-    // If the page is already loaded, log immediately
+    // Initialize when DOM is ready
     if (document.readyState === 'complete') {
-      handleLoad();
+      console.log('Document already complete, initializing immediately');
+      initializeAnchors();
     } else {
-      window.addEventListener('load', handleLoad);
+      console.log('Waiting for load event before initializing');
+      window.addEventListener('load', () => {
+        console.log('Page fully loaded, initializing anchors');
+        initializeAnchors();
+      });
     }
 
+    // Cleanup function
     return () => {
-      window.removeEventListener('load', handleLoad);
-      window.removeEventListener('scroll', handleScroll);
-      anchorLinks.forEach(link => link.removeEventListener("click", handleAnchorClick));
-      console.log("AnchorLinks unmounted");
+      console.log("AnchorLinks cleanup starting");
+      document.body.removeEventListener("click", handleAnchorClick);
+      console.log("AnchorLinks unmounted - Cleanup complete");
     };
   }, []);
 
-  return null; // This component only sets up event listeners
+  return null;
 };
 
 export default AnchorLinks;

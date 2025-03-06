@@ -49,11 +49,13 @@ const SecureRichText = ({ content, className, as: Element = 'div' }) => {
             const targetPage = anchorPage?.nodes?.[0]?.link;
 
             if (targetPage && anchorSlug) {
-              const newHref = targetPage === currentPath 
+              const isLocalPage = targetPage === currentPath;
+              const newHref = isLocalPage 
                 ? `#${anchorSlug}`
                 : `${targetPage}#${anchorSlug}`;
               
-              const newAnchor = `<a${before}href="${newHref}"${after} data-anchor="true" data-local="true">`;
+              const localAttr = isLocalPage ? ' data-local="true"' : '';
+              const newAnchor = `<a${before}href="${newHref}"${after} data-anchor="true"${localAttr}>`;
               newContent = newContent.replace(fullMatch, newAnchor);
             }
           }
